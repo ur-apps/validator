@@ -1,0 +1,17 @@
+node_modules
+build
+dist
+lib
+coverage
+package-lock.json
+.DS_STORE
+.vscode
+.module-cache
+.env
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+.eslintcache

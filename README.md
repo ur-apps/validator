@@ -1,0 +1,3 @@
+# Gvalid
+
+JavaScript / TypeScript validator
