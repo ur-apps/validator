@@ -7,7 +7,10 @@
   "module": "lib/index.js",
   "publisher": "npm run build",
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "release:patch": "npm version patch && git push --follow-tags",
+    "release:minor": "npm version minor && git push --follow-tags",
+    "release:major": "npm version major && git push --follow-tags"
   },
   "files": [
     "lib"
