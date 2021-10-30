@@ -5,7 +5,6 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "module": "lib/index.js",
-  "publisher": "npm run build",
   "scripts": {
     "build": "tsc -p .",
     "lint": "eslint ./src",
