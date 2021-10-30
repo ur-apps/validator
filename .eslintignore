@@ -1,2 +1,5 @@
-tests
+node_modules
+dist
 build
+lib
+.github

@@ -8,10 +8,15 @@
   "publisher": "npm run build",
   "scripts": {
     "build": "tsc -p .",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "release:patch": "npm version patch && git push --follow-tags",
     "release:minor": "npm version minor && git push --follow-tags",
     "release:major": "npm version major && git push --follow-tags"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "files": [
     "lib"
   ],
@@ -35,6 +40,7 @@
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "eslint": "^8.0.1",
+    "pre-commit": "^1.2.2",
     "typescript": "^4.4.4"
   }
 }
