@@ -11,16 +11,16 @@ export class Validator<TValues extends Record<string, any>> {
     if (customMessages) this.messages = { ...defaultMessages, ...customMessages };
   }
 
-  validateOne(value: any, name: string, fieldSchema: TFieldOptions, relatedValue?: any) {
+  validateOne(value: any, fieldSchema: TFieldOptions, relatedValue?: any) {
     const result = {
+      valid: true,
       value,
       error: '',
-      valid: true,
     };
 
     if (fieldSchema.required) {
       if (!this.validateRequired(value)) {
-        result.error = this.getErrorMessage('required', name);
+        result.error = fieldSchema.required.message ?? this.getErrorMessage('required');
         result.valid = false;
         return result;
       }
@@ -37,7 +37,7 @@ export class Validator<TValues extends Record<string, any>> {
               if (this.validateNumber(value)) {
                 result.value = +value;
               } else {
-                result.error = this.getErrorMessage('type', name);
+                result.error = fieldSchema.type.message ?? this.getErrorMessage('type');
                 result.valid = false;
                 return result;
               }
@@ -46,44 +46,47 @@ export class Validator<TValues extends Record<string, any>> {
 
           case 'length':
             if (this.validateLength(value, fieldSchema.legnth!.value)) break;
-            result.error = this.getErrorMessage('legnth', name, fieldSchema.legnth?.value);
+            result.error = fieldSchema.legnth?.message ?? this.getErrorMessage('legnth', fieldSchema.legnth?.value);
             result.valid = false;
             return result;
 
           case 'minLength':
             if (this.validateMinLength(value, fieldSchema.minLength!.value)) break;
-            result.error = this.getErrorMessage('minLength', name, fieldSchema.minLength?.value);
+            result.error =
+              fieldSchema.minLength?.message ?? this.getErrorMessage('minLength', fieldSchema.minLength?.value);
             result.valid = false;
             return result;
 
           case 'maxLength':
             if (this.validateMaxLength(value, fieldSchema.maxLength!.value)) break;
-            result.error = this.getErrorMessage('maxLength', name, fieldSchema.maxLength?.value);
+            result.error =
+              fieldSchema.maxLength?.message ?? this.getErrorMessage('maxLength', fieldSchema.maxLength?.value);
             result.valid = false;
             return result;
 
           case 'min':
             if (this.validateMin(value, fieldSchema.min!.value)) break;
-            result.error = this.getErrorMessage('min', name, fieldSchema.min?.value);
+            result.error = fieldSchema.min?.message ?? this.getErrorMessage('min', fieldSchema.min?.value);
             result.valid = false;
             return result;
 
           case 'max':
             if (this.validateMax(value, fieldSchema.max!.value)) break;
-            result.error = this.getErrorMessage('max', name, fieldSchema.max!.value);
+            result.error = fieldSchema.max?.message ?? this.getErrorMessage('max', fieldSchema.max!.value);
             result.valid = false;
             return result;
 
           case 'pattern':
             if (this.validatePattern(value, fieldSchema.pattern!.value)) break;
-            result.error = this.getErrorMessage('pattern', name);
+            result.error = fieldSchema.pattern?.message ?? this.getErrorMessage('pattern');
             result.valid = false;
             return result;
 
           case 'equalField':
             if (relatedValue === undefined) break;
             if (this.validateEqual(value, relatedValue)) break;
-            result.error = this.getErrorMessage('equalField', name, fieldSchema.equalField!.name);
+            result.error =
+              fieldSchema.equalField?.message ?? this.getErrorMessage('equalField', fieldSchema.equalField!.name);
             result.valid = false;
             return result;
 
@@ -110,7 +113,6 @@ export class Validator<TValues extends Record<string, any>> {
 
       const fieldResult = this.validateOne(
         value,
-        name,
         fieldSchema,
         fieldSchema.equalField && values[fieldSchema.equalField.name]
       );
@@ -139,7 +141,6 @@ export class Validator<TValues extends Record<string, any>> {
 
       const fieldResult = this.validateOne(
         value,
-        name as string,
         fieldSchema,
         fieldSchema.equalField && values[fieldSchema.equalField.name]
       );
@@ -205,55 +206,36 @@ export class Validator<TValues extends Record<string, any>> {
     return value === equalValue;
   }
 
-  private getErrorMessage(option: keyof TFieldOptions, fieldName: string, value?: number | string): string {
-    const message = this.schema[fieldName]?.[option]?.message;
-    if (message) return message;
-
+  private getErrorMessage(option: keyof TFieldOptions, value?: number | string): string {
     switch (option) {
       case 'type':
-        return message || typeof this.messages.type === 'string'
-          ? (this.messages.type as string)
-          : this.messages.type(fieldName);
+        return this.messages.type;
 
       case 'required':
-        return message || typeof this.messages.required === 'string'
-          ? (this.messages.required as string)
-          : this.messages.required(fieldName);
+        return this.messages.required;
 
       case 'legnth':
-        return message || typeof this.messages.length === 'string'
-          ? (this.messages.length as string)
-          : this.messages.length(fieldName, value as number);
+        return typeof this.messages.length === 'string' ? this.messages.length : this.messages.length(value as number);
 
       case 'minLength':
-        return message || typeof this.messages.short === 'string'
-          ? (this.messages.short as string)
-          : this.messages.short(fieldName, value as number);
+        return typeof this.messages.short === 'string' ? this.messages.short : this.messages.short(value as number);
 
       case 'maxLength':
-        return message || typeof this.messages.long === 'string'
-          ? (this.messages.long as string)
-          : this.messages.long(fieldName, value as number);
+        return typeof this.messages.long === 'string' ? this.messages.long : this.messages.long(value as number);
 
       case 'min':
-        return message || typeof this.messages.small === 'string'
-          ? (this.messages.small as string)
-          : this.messages.small(fieldName, value as number);
+        return typeof this.messages.small === 'string' ? this.messages.small : this.messages.small(value as number);
 
       case 'max':
-        return message || typeof this.messages.large === 'string'
-          ? (this.messages.large as string)
-          : this.messages.large(fieldName, value as number);
+        return typeof this.messages.large === 'string' ? this.messages.large : this.messages.large(value as number);
 
       case 'pattern':
-        return message || typeof this.messages.format === 'string'
-          ? (this.messages.format as string)
-          : this.messages.format(fieldName);
+        return this.messages.format;
 
       case 'equalField':
-        return message || typeof this.messages.unequal === 'string'
-          ? (this.messages.unequal as string)
-          : this.messages.unequal(fieldName, value as string);
+        return typeof this.messages.unequal === 'string'
+          ? this.messages.unequal
+          : this.messages.unequal(value as string);
 
       default:
         return '';

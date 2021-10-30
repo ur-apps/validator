@@ -1,13 +1,13 @@
 import type { TValidationMessages } from './types';
 
 export const messages: TValidationMessages = {
-  type: (name: string) => `${name} field is invalid`,
-  required: (name: string) => `${name} is a required field`,
-  length: (name: string, length: number) => `${name} must be exactly ${length} characters`,
-  short: (name: string, length: number) => `${name} must be at least ${length} characters`,
-  long: (name: string, length: number) => `${name} must be at most ${length} characters`,
-  small: (name: string, min: number) => `${name} must be greater than or equal to ${min}`,
-  large: (name: string, max: number) => `${name} must be less than or equal to ${max}`,
-  format: (name: string) => `${name} field is invalid`,
-  unequal: (name: string, relField: string) => `${name} field must equal ${relField} field`,
+  type: 'Invalid data type',
+  required: 'required field',
+  length: (length: number) => `field length must be ${length} characters`,
+  short: (length: number) => `minimum field length ${length} characters`,
+  long: (length: number) => `maximum field length ${length} characters`,
+  small: (min: number) => `minimum value is greater than or equal to ${min}`,
+  large: (max: number) => `the maximum value is less than or equal to ${max}`,
+  format: 'field is invalid',
+  unequal: (relField: string) => `field must match ${relField} field`,
 };
