@@ -2,12 +2,12 @@ import { messages as defaultMessages } from './messages';
 import type { TValidationSchema, TFieldOptions, TValidationResult, TValidationMessages } from './types';
 
 export class Validator<TValues extends Record<string, any>> {
-  private readonly schema: TValidationSchema<TValues>;
+  private readonly schema: TValidationSchema<TValues> = {};
 
   private readonly messages: TValidationMessages = defaultMessages;
 
-  constructor(schema: TValidationSchema<TValues>, customMessages?: Partial<TValidationMessages>) {
-    this.schema = schema;
+  constructor(schema?: TValidationSchema<TValues>, customMessages?: Partial<TValidationMessages>) {
+    if (schema) this.schema = schema;
     if (customMessages) this.messages = { ...defaultMessages, ...customMessages };
   }
 

@@ -1,7 +1,7 @@
 import { TFieldOptions, Validator } from '../lib';
 
 describe('Validator: validateOne', () => {
-  const validator = new Validator({});
+  const validator = new Validator();
 
   test('type: string | number | boolean, requred: true, with default message', () => {
     const requredStringSchema: TFieldOptions = {
