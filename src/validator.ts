@@ -26,16 +26,32 @@ export class Validator<TValues extends Record<string, any>> {
       }
     }
 
-    if (value || value === 0) {
+    if ((typeof value === 'string' && value) || typeof value === 'number' || typeof value === 'boolean') {
       for (const option in fieldSchema) {
         switch (option) {
           case 'required':
             break;
 
           case 'type':
-            if (fieldSchema.type.value === 'number') {
+            if (fieldSchema.type.value === 'string') {
+              if (this.validateString(value)) {
+                result.value = String(value);
+              } else {
+                result.error = fieldSchema.type.message ?? this.getErrorMessage('type');
+                result.valid = false;
+                return result;
+              }
+            } else if (fieldSchema.type.value === 'number') {
               if (this.validateNumber(value)) {
                 result.value = +value;
+              } else {
+                result.error = fieldSchema.type.message ?? this.getErrorMessage('type');
+                result.valid = false;
+                return result;
+              }
+            } else if (fieldSchema.type.value === 'boolean') {
+              if (this.validateBoolean(value)) {
+                result.value = Boolean(value);
               } else {
                 result.error = fieldSchema.type.message ?? this.getErrorMessage('type');
                 result.valid = false;
@@ -155,54 +171,66 @@ export class Validator<TValues extends Record<string, any>> {
     return result;
   }
 
-  private validateNumber(value: number | string): boolean {
-    return Number.isFinite(+value);
+  private validateString(value: any): boolean {
+    return typeof value === 'string' || typeof value === 'number' || typeof value === 'bigint';
   }
 
-  private validateRequired(value: string): boolean {
-    if (typeof value === 'string' && value) return true;
-    if (typeof value === 'number' && (value === 0 || value)) return true;
+  private validateNumber(value: any): boolean {
+    if (typeof value === 'string' && value.trim() && Number.isFinite(+value)) return true;
+    if (typeof value === 'number' && !Number.isNaN(value)) return true;
 
     return false;
   }
 
-  private validateLength(value: string, length: number): boolean {
+  private validateBoolean(value: any): boolean {
+    return typeof value === 'boolean';
+  }
+
+  private validateRequired(value: any): boolean {
+    if (typeof value === 'string' && value.trim()) return true;
+    if (typeof value === 'number' && Number.isFinite(value)) return true;
+    if (typeof value === 'boolean') return true;
+
+    return false;
+  }
+
+  private validateLength(value: any, length: number): boolean {
     if (typeof value === 'string' && value.length === length) return true;
 
     return false;
   }
 
-  private validateMinLength(value: string, length: number): boolean {
+  private validateMinLength(value: any, length: number): boolean {
     if (typeof value === 'string' && value.length >= length) return true;
 
     return false;
   }
 
-  private validateMaxLength(value: string, length: number): boolean {
+  private validateMaxLength(value: any, length: number): boolean {
     if (typeof value === 'string' && value.length <= length) return true;
 
     return false;
   }
 
-  private validateMin(value: string | number, min: number): boolean {
+  private validateMin(value: any, min: number): boolean {
     if (typeof value === 'number' && value >= min) return true;
-    if (typeof value === 'string' && value !== '' && +value >= min) return true;
+    if (typeof value === 'string' && value.trim() && +value >= min) return true;
 
     return false;
   }
 
-  private validateMax(value: string | number, max: number): boolean {
+  private validateMax(value: any, max: number): boolean {
     if (typeof value === 'number' && value <= max) return true;
-    if (typeof value === 'string' && value !== '' && +value <= max) return true;
+    if (typeof value === 'string' && value.trim() && +value <= max) return true;
 
     return false;
   }
 
-  private validatePattern(value: string, pattern: RegExp): boolean {
-    return pattern.test(value);
+  private validatePattern(value: any, pattern: RegExp): boolean {
+    return typeof value === 'string' && pattern.test(value);
   }
 
-  private validateEqual(value: string | number, equalValue: string | number): boolean {
+  private validateEqual(value: any, equalValue: any): boolean {
     return value === equalValue;
   }
 

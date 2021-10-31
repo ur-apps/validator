@@ -3,7 +3,7 @@ export type TValidationSchema<TValues extends Record<string, any> = Record<strin
 };
 
 export type TFieldOptions = {
-  type: { value: 'string' | 'number'; message?: string };
+  type: { value: 'string' | 'number' | 'boolean'; message?: string };
   required?: { value: boolean; message?: string };
   legnth?: { value: number; message?: string };
   minLength?: { value: number; message?: string };

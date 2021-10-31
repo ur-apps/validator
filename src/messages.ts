@@ -1,7 +1,7 @@
 import type { TValidationMessages } from './types';
 
 export const messages: TValidationMessages = {
-  type: 'Invalid data type',
+  type: 'invalid data type',
   required: 'required field',
   length: (length: number) => `field length must be ${length} characters`,
   short: (length: number) => `minimum field length ${length} characters`,
