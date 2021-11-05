@@ -28,8 +28,10 @@ export type TValidationMessages = {
 
 export type TValidationResult<TValues> = {
   valid: boolean;
-  errors: {
-    [key in keyof TValues]?: string;
-  };
+  errors: TErrors<TValues>;
   values: TValues;
+};
+
+export type TErrors<T = Record<string, string>> = {
+  [key in keyof T]?: string;
 };

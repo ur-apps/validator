@@ -115,16 +115,16 @@ export class Validator<TValues extends Record<string, any>> {
     return result;
   }
 
-  validateAll(values: TValues): TValidationResult<TValues> {
+  validateAll(values: TValues, schema?: TValidationSchema<TValues>): TValidationResult<TValues> {
     const result: TValidationResult<TValues> = {
       errors: {},
       values,
       valid: true,
     };
 
-    for (const name in this.schema) {
+    for (const name in schema ?? this.schema) {
       const value: TValues[keyof TValues] = values[name];
-      const fieldSchema = this.schema[name];
+      const fieldSchema = (schema ?? this.schema)[name];
       if (!fieldSchema) continue;
 
       const fieldResult = this.validateOne(
@@ -143,7 +143,11 @@ export class Validator<TValues extends Record<string, any>> {
     return result;
   }
 
-  validateChosen(values: TValues, fields: Array<keyof TValues>): TValidationResult<TValues> {
+  validateChosen(
+    values: TValues,
+    fields: Array<keyof TValues>,
+    schema?: TValidationSchema<TValues>
+  ): TValidationResult<TValues> {
     const result: TValidationResult<TValues> = {
       errors: {},
       values,
@@ -152,7 +156,7 @@ export class Validator<TValues extends Record<string, any>> {
 
     for (const name of fields) {
       const value: TValues[keyof TValues] = values[name];
-      const fieldSchema = this.schema[name];
+      const fieldSchema = (schema ?? this.schema)[name];
       if (!fieldSchema) continue;
 
       const fieldResult = this.validateOne(
@@ -171,22 +175,22 @@ export class Validator<TValues extends Record<string, any>> {
     return result;
   }
 
-  private validateString(value: any): boolean {
+  validateString(value: any): boolean {
     return typeof value === 'string' || typeof value === 'number' || typeof value === 'bigint';
   }
 
-  private validateNumber(value: any): boolean {
+  validateNumber(value: any): boolean {
     if (typeof value === 'string' && value.trim() && Number.isFinite(+value)) return true;
     if (typeof value === 'number' && !Number.isNaN(value)) return true;
 
     return false;
   }
 
-  private validateBoolean(value: any): boolean {
+  validateBoolean(value: any): boolean {
     return typeof value === 'boolean';
   }
 
-  private validateRequired(value: any): boolean {
+  validateRequired(value: any): boolean {
     if (typeof value === 'string' && value.trim()) return true;
     if (typeof value === 'number' && Number.isFinite(value)) return true;
     if (typeof value === 'boolean') return true;
@@ -194,44 +198,53 @@ export class Validator<TValues extends Record<string, any>> {
     return false;
   }
 
-  private validateLength(value: any, length: number): boolean {
+  validateLength(value: any, length: number): boolean {
     if (typeof value === 'string' && value.length === length) return true;
 
     return false;
   }
 
-  private validateMinLength(value: any, length: number): boolean {
+  validateMinLength(value: any, length: number): boolean {
     if (typeof value === 'string' && value.length >= length) return true;
 
     return false;
   }
 
-  private validateMaxLength(value: any, length: number): boolean {
+  validateMaxLength(value: any, length: number): boolean {
     if (typeof value === 'string' && value.length <= length) return true;
 
     return false;
   }
 
-  private validateMin(value: any, min: number): boolean {
+  validateMin(value: any, min: number): boolean {
     if (typeof value === 'number' && value >= min) return true;
     if (typeof value === 'string' && value.trim() && +value >= min) return true;
 
     return false;
   }
 
-  private validateMax(value: any, max: number): boolean {
+  validateMax(value: any, max: number): boolean {
     if (typeof value === 'number' && value <= max) return true;
     if (typeof value === 'string' && value.trim() && +value <= max) return true;
 
     return false;
   }
 
-  private validatePattern(value: any, pattern: RegExp): boolean {
+  validatePattern(value: any, pattern: RegExp): boolean {
     return typeof value === 'string' && pattern.test(value);
   }
 
-  private validateEqual(value: any, equalValue: any): boolean {
+  validateEqual(value: any, equalValue: any): boolean {
     return value === equalValue;
+  }
+
+  validateJSON(data: any): boolean {
+    try {
+      JSON.parse(data);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   private getErrorMessage(option: keyof TFieldOptions, value?: number | string): string {
@@ -272,3 +285,4 @@ export class Validator<TValues extends Record<string, any>> {
 }
 
 export default Validator;
+export const validator = new Validator();
