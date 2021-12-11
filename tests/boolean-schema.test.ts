@@ -991,17 +991,17 @@ describe('Schema: BooleanSchema / method: isValid()', () => {
   });
 });
 
-describe('Schema: BooleanSchema / method: format()', () => {
-  test('data formation', () => {
-    expect(boolean().format(true)).toEqual(true);
-    expect(boolean().format(false)).toEqual(false);
-    expect(boolean().format(1)).toEqual(true);
-    expect(boolean().format(0)).toEqual(false);
-    expect(() => boolean().strict().format(0)).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().strict().format(1)).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().format(undefined)).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().format(null)).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().format('string')).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().format({})).toThrowError(new TypeError(messages.boolean));
+describe('Schema: BooleanSchema / method: cast()', () => {
+  test('data casting', () => {
+    expect(boolean().cast(true)).toEqual(true);
+    expect(boolean().cast(false)).toEqual(false);
+    expect(boolean().cast(1)).toEqual(true);
+    expect(boolean().cast(0)).toEqual(false);
+    expect(() => boolean().strict().cast(0)).toThrowError(new TypeError(messages.boolean));
+    expect(() => boolean().strict().cast(1)).toThrowError(new TypeError(messages.boolean));
+    expect(() => boolean().cast(undefined)).toThrowError(new TypeError(messages.boolean));
+    expect(() => boolean().cast(null)).toThrowError(new TypeError(messages.boolean));
+    expect(() => boolean().cast('string')).toThrowError(new TypeError(messages.boolean));
+    expect(() => boolean().cast({})).toThrowError(new TypeError(messages.boolean));
   });
 });

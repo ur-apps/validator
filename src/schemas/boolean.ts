@@ -94,7 +94,7 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     return this.validate(value).valid;
   }
 
-  format(value: any) {
+  cast(value: any) {
     const valid = this.validateBoolean(value);
 
     if (valid) {
