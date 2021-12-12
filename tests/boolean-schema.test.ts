@@ -258,101 +258,122 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('default messages: not strict', () => {
     expect(boolean().validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean().validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean().validate(0)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean().validate(1)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean().validate(-1)).toEqual({
       valid: false,
+      value: -1,
       error: messages.boolean,
     });
 
     expect(boolean().validate(2)).toEqual({
       valid: false,
+      value: 2,
       error: messages.boolean,
     });
 
     expect(boolean().validate('')).toEqual({
       valid: false,
+      value: '',
       error: messages.boolean,
     });
 
     expect(boolean().validate('text')).toEqual({
       valid: false,
+      value: 'text',
       error: messages.boolean,
     });
 
     expect(boolean().validate(NaN)).toEqual({
       valid: false,
+      value: NaN,
       error: messages.boolean,
     });
 
     expect(boolean().validate(Infinity)).toEqual({
       valid: false,
+      value: Infinity,
       error: messages.boolean,
     });
 
     expect(boolean().validate(-Infinity)).toEqual({
       valid: false,
+      value: -Infinity,
       error: messages.boolean,
     });
 
     expect(boolean().validate({})).toEqual({
       valid: false,
+      value: {},
       error: messages.boolean,
     });
 
     expect(boolean().validate({ a: 1 })).toEqual({
       valid: false,
+      value: { a: 1 },
       error: messages.boolean,
     });
 
     expect(boolean().validate([])).toEqual({
       valid: false,
+      value: [],
       error: messages.boolean,
     });
 
     expect(boolean().validate([0])).toEqual({
       valid: false,
+      value: [0],
       error: messages.boolean,
     });
 
     expect(boolean().validate([1])).toEqual({
       valid: false,
+      value: [1],
       error: messages.boolean,
     });
 
     expect(boolean().validate([1, 2, 3])).toEqual({
       valid: false,
+      value: [1, 2, 3],
       error: messages.boolean,
     });
 
-    expect(boolean().validate(Symbol('a'))).toEqual({
+    const symbol = Symbol('a');
+    expect(boolean().validate(symbol)).toEqual({
       valid: false,
+      value: symbol,
       error: messages.boolean,
     });
 
     expect(boolean().validate(undefined)).toEqual({
       valid: true,
+      value: undefined,
       error: '',
     });
 
     expect(boolean().validate(null)).toEqual({
       valid: true,
+      value: null,
       error: '',
     });
   });
@@ -360,101 +381,122 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('default messages: strict', () => {
     expect(boolean().strict().validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean().strict().validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean().strict().validate(0)).toEqual({
       valid: false,
+      value: 0,
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate(1)).toEqual({
       valid: false,
+      value: 1,
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate(-1)).toEqual({
       valid: false,
+      value: -1,
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate(2)).toEqual({
       valid: false,
+      value: 2,
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate('')).toEqual({
       valid: false,
+      value: '',
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate('text')).toEqual({
       valid: false,
+      value: 'text',
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate(NaN)).toEqual({
       valid: false,
+      value: NaN,
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate(Infinity)).toEqual({
       valid: false,
+      value: Infinity,
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate(-Infinity)).toEqual({
       valid: false,
+      value: -Infinity,
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate({})).toEqual({
       valid: false,
+      value: {},
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate({ a: 1 })).toEqual({
       valid: false,
+      value: { a: 1 },
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate([])).toEqual({
       valid: false,
+      value: [],
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate([0])).toEqual({
       valid: false,
+      value: [0],
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate([1])).toEqual({
       valid: false,
+      value: [1],
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate([1, 2, 3])).toEqual({
       valid: false,
+      value: [1, 2, 3],
       error: messages.boolean,
     });
 
-    expect(boolean().strict().validate(Symbol('a'))).toEqual({
+    const symbol = Symbol('a');
+    expect(boolean().strict().validate(symbol)).toEqual({
       valid: false,
+      value: symbol,
       error: messages.boolean,
     });
 
     expect(boolean().strict().validate(undefined)).toEqual({
       valid: true,
+      value: undefined,
       error: '',
     });
 
     expect(boolean().strict().validate(null)).toEqual({
       valid: true,
+      value: null,
       error: '',
     });
   });
@@ -462,90 +504,109 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('default messages: required', () => {
     expect(boolean().required().validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean().required().validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean().required().validate(1)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean().required().validate(0)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean().required().validate('')).toEqual({
       valid: false,
+      value: '',
       error: messages.boolean,
     });
 
     expect(boolean().required().validate('text')).toEqual({
       valid: false,
+      value: 'text',
       error: messages.boolean,
     });
 
     expect(boolean().required().validate(NaN)).toEqual({
       valid: false,
+      value: NaN,
       error: messages.boolean,
     });
 
     expect(boolean().required().validate(Infinity)).toEqual({
       valid: false,
+      value: Infinity,
       error: messages.boolean,
     });
 
     expect(boolean().required().validate(-Infinity)).toEqual({
       valid: false,
+      value: -Infinity,
       error: messages.boolean,
     });
 
     expect(boolean().required().validate({})).toEqual({
       valid: false,
+      value: {},
       error: messages.boolean,
     });
 
     expect(boolean().required().validate({ a: 1 })).toEqual({
       valid: false,
+      value: { a: 1 },
       error: messages.boolean,
     });
 
     expect(boolean().required().validate([])).toEqual({
       valid: false,
+      value: [],
       error: messages.boolean,
     });
 
     expect(boolean().required().validate([0])).toEqual({
       valid: false,
+      value: [0],
       error: messages.boolean,
     });
 
     expect(boolean().required().validate([1])).toEqual({
       valid: false,
+      value: [1],
       error: messages.boolean,
     });
 
     expect(boolean().required().validate([1, 2, 3])).toEqual({
       valid: false,
+      value: [1, 2, 3],
       error: messages.boolean,
     });
 
-    expect(boolean().required().validate(Symbol('a'))).toEqual({
+    const symbol = Symbol('a');
+    expect(boolean().required().validate(symbol)).toEqual({
       valid: false,
+      value: symbol,
       error: messages.boolean,
     });
 
     expect(boolean().required().validate(undefined)).toEqual({
       valid: false,
+      value: undefined,
       error: messages.required,
     });
     expect(boolean().required().validate(null)).toEqual({
       valid: false,
+      value: null,
       error: messages.required,
     });
   });
@@ -553,31 +614,37 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('default messages: isTrue', () => {
     expect(boolean().isTrue().validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean().isTrue().validate(1)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean().isTrue().validate(false)).toEqual({
       valid: false,
+      value: false,
       error: messages.true,
     });
 
     expect(boolean().isTrue().validate(0)).toEqual({
       valid: false,
+      value: 0,
       error: messages.true,
     });
 
     expect(boolean().isFalse().isTrue().validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean().isFalse().isTrue().validate(false)).toEqual({
       valid: false,
+      value: false,
       error: messages.true,
     });
   });
@@ -585,31 +652,37 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('default messages: isFalse', () => {
     expect(boolean().isFalse().validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean().isFalse().validate(0)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean().isFalse().validate(true)).toEqual({
       valid: false,
+      value: true,
       error: messages.false,
     });
 
     expect(boolean().isFalse().validate(1)).toEqual({
       valid: false,
+      value: 1,
       error: messages.false,
     });
 
     expect(boolean().isTrue().isFalse().validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean().isTrue().isFalse().validate(true)).toEqual({
       valid: false,
+      value: true,
       error: messages.false,
     });
   });
@@ -617,101 +690,122 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('custom messages: not strict', () => {
     expect(boolean('custom type message').validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean('custom type message').validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean('custom type message').validate(0)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean('custom type message').validate(1)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean('custom type message').validate(-1)).toEqual({
       valid: false,
+      value: -1,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate(2)).toEqual({
       valid: false,
+      value: 2,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate('')).toEqual({
       valid: false,
+      value: '',
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate('text')).toEqual({
       valid: false,
+      value: 'text',
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate(NaN)).toEqual({
       valid: false,
+      value: NaN,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate(Infinity)).toEqual({
       valid: false,
+      value: Infinity,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate(-Infinity)).toEqual({
       valid: false,
+      value: -Infinity,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate({})).toEqual({
       valid: false,
+      value: {},
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate({ a: 1 })).toEqual({
       valid: false,
+      value: { a: 1 },
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate([])).toEqual({
       valid: false,
+      value: [],
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate([0])).toEqual({
       valid: false,
+      value: [0],
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate([1])).toEqual({
       valid: false,
+      value: [1],
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate([1, 2, 3])).toEqual({
       valid: false,
+      value: [1, 2, 3],
       error: 'custom type message',
     });
 
-    expect(boolean('custom type message').validate(Symbol('a'))).toEqual({
+    const symbol = Symbol('a');
+    expect(boolean('custom type message').validate(symbol)).toEqual({
       valid: false,
+      value: symbol,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').validate(undefined)).toEqual({
       valid: true,
+      value: undefined,
       error: '',
     });
 
     expect(boolean('custom type message').validate(null)).toEqual({
       valid: true,
+      value: null,
       error: '',
     });
   });
@@ -719,101 +813,122 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('custom messages: strict', () => {
     expect(boolean('custom type message').strict('custom strict message').validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(0)).toEqual({
       valid: false,
+      value: 0,
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(1)).toEqual({
       valid: false,
+      value: 1,
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(-1)).toEqual({
       valid: false,
+      value: -1,
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(2)).toEqual({
       valid: false,
+      value: 2,
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate('')).toEqual({
       valid: false,
+      value: '',
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate('text')).toEqual({
       valid: false,
+      value: 'text',
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(NaN)).toEqual({
       valid: false,
+      value: NaN,
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(Infinity)).toEqual({
       valid: false,
+      value: Infinity,
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(-Infinity)).toEqual({
       valid: false,
+      value: -Infinity,
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate({})).toEqual({
       valid: false,
+      value: {},
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate({ a: 1 })).toEqual({
       valid: false,
+      value: { a: 1 },
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate([])).toEqual({
       valid: false,
+      value: [],
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate([0])).toEqual({
       valid: false,
+      value: [0],
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate([1])).toEqual({
       valid: false,
+      value: [1],
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate([1, 2, 3])).toEqual({
       valid: false,
+      value: [1, 2, 3],
       error: 'custom strict message',
     });
 
-    expect(boolean('custom type message').strict('custom strict message').validate(Symbol('a'))).toEqual({
+    const symbol = Symbol('a');
+    expect(boolean('custom type message').strict('custom strict message').validate(symbol)).toEqual({
       valid: false,
+      value: symbol,
       error: 'custom strict message',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(undefined)).toEqual({
       valid: true,
+      value: undefined,
       error: '',
     });
 
     expect(boolean('custom type message').strict('custom strict message').validate(null)).toEqual({
       valid: true,
+      value: null,
       error: '',
     });
   });
@@ -821,91 +936,110 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('custom messages: required', () => {
     expect(boolean('custom type message').required('custom required  message').validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean('custom type message').required('custom required message').validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean('custom type message').required('custom required message').validate(1)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean('custom type message').required('custom required message').validate(0)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean('custom type message').required('custom required message').validate('')).toEqual({
       valid: false,
+      value: '',
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate('text')).toEqual({
       valid: false,
+      value: 'text',
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate(NaN)).toEqual({
       valid: false,
+      value: NaN,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate(Infinity)).toEqual({
       valid: false,
+      value: Infinity,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate(-Infinity)).toEqual({
       valid: false,
+      value: -Infinity,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate({})).toEqual({
       valid: false,
+      value: {},
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate({ a: 1 })).toEqual({
       valid: false,
+      value: { a: 1 },
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate([])).toEqual({
       valid: false,
+      value: [],
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate([0])).toEqual({
       valid: false,
+      value: [0],
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate([1])).toEqual({
       valid: false,
+      value: [1],
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate([1, 2, 3])).toEqual({
       valid: false,
+      value: [1, 2, 3],
       error: 'custom type message',
     });
 
-    expect(boolean('custom type message').required('custom required message').validate(Symbol('a'))).toEqual({
+    const symbol = Symbol('a');
+    expect(boolean('custom type message').required('custom required message').validate(symbol)).toEqual({
       valid: false,
+      value: symbol,
       error: 'custom type message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate(undefined)).toEqual({
       valid: false,
+      value: undefined,
       error: 'custom required message',
     });
 
     expect(boolean('custom type message').required('custom required message').validate(null)).toEqual({
       valid: false,
+      value: null,
       error: 'custom required message',
     });
   });
@@ -913,21 +1047,25 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('custom messages: isTrue', () => {
     expect(boolean('custom type message').isTrue('custom isTrue message').validate(true)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean('custom type message').isTrue('custom isTrue message').validate(1)).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
     expect(boolean('custom type message').isTrue('custom isTrue message').validate(false)).toEqual({
       valid: false,
+      value: false,
       error: 'custom isTrue message',
     });
 
     expect(boolean('custom type message').isTrue('custom isTrue message').validate(0)).toEqual({
       valid: false,
+      value: 0,
       error: 'custom isTrue message',
     });
 
@@ -935,6 +1073,7 @@ describe('Schema: BooleanSchema / method: validate()', () => {
       boolean('custom type message').isFalse('custom isFalse message').isTrue('custom isTrue message').validate(true)
     ).toEqual({
       valid: true,
+      value: true,
       error: '',
     });
 
@@ -942,6 +1081,7 @@ describe('Schema: BooleanSchema / method: validate()', () => {
       boolean('custom type message').isFalse('custom isFalse message').isTrue('custom isTrue message').validate(false)
     ).toEqual({
       valid: false,
+      value: false,
       error: 'custom isTrue message',
     });
   });
@@ -949,21 +1089,25 @@ describe('Schema: BooleanSchema / method: validate()', () => {
   test('custom messages: isFalse', () => {
     expect(boolean('custom type message').isFalse('custom isFalse message').validate(false)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean('custom type message').isFalse('custom isFalse message').validate(0)).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
     expect(boolean('custom type message').isFalse('custom isFalse message').validate(true)).toEqual({
       valid: false,
+      value: true,
       error: 'custom isFalse message',
     });
 
     expect(boolean('custom type message').isFalse('custom isFalse message').validate(1)).toEqual({
       valid: false,
+      value: 1,
       error: 'custom isFalse message',
     });
 
@@ -971,6 +1115,7 @@ describe('Schema: BooleanSchema / method: validate()', () => {
       boolean('custom type message').isTrue('custom isTrue message').isFalse('custom isFalse message').validate(false)
     ).toEqual({
       valid: true,
+      value: false,
       error: '',
     });
 
@@ -978,6 +1123,7 @@ describe('Schema: BooleanSchema / method: validate()', () => {
       boolean('custom type message').isTrue('custom isTrue message').isFalse('custom isFalse message').validate(true)
     ).toEqual({
       valid: false,
+      value: true,
       error: 'custom isFalse message',
     });
   });

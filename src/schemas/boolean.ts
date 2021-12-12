@@ -7,6 +7,12 @@ export type TBooleanOptions = TBaseOptions & {
   isFalse?: { value: boolean; message: string };
 };
 
+type TValidationResult = {
+  valid: boolean;
+  value: any;
+  error: string;
+};
+
 export class BooleanSchema extends BaseSchema<TBooleanOptions> {
   constructor(message?: string) {
     super('boolean', message ?? messages.boolean);
@@ -43,9 +49,10 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     return this;
   }
 
-  validate(value: any) {
+  validate(value: any): TValidationResult {
     const result = {
       valid: true,
+      value,
       error: '',
     };
 
@@ -56,7 +63,9 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     }
 
     if (value !== undefined && value !== null) {
-      if (!this.validateType(value)) {
+      if (this.validateType(value)) {
+        result.value = Boolean(value);
+      } else {
         result.valid = false;
         result.error = this.schema.type.message;
         return result;
@@ -70,15 +79,17 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
 
           case 'isTrue':
             if (!this.schema.isTrue?.value) break;
-            if (this.validateIsTrue(value)) break;
+            if (this.validateIsTrue(result.value)) break;
             result.valid = false;
+            result.value = value;
             result.error = this.schema.isTrue!.message;
             return result;
 
           case 'isFalse':
             if (!this.schema.isFalse?.value) break;
-            if (this.validateIsFalse(value)) break;
+            if (this.validateIsFalse(result.value)) break;
             result.valid = false;
+            result.value = value;
             result.error = this.schema.isFalse!.message;
             return result;
 
@@ -118,12 +129,12 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     return false;
   }
 
-  private validateIsTrue(value: any) {
-    return Boolean(value) === true;
+  private validateIsTrue(value: boolean) {
+    return value === true;
   }
 
-  private validateIsFalse(value: any) {
-    return Boolean(value) === false;
+  private validateIsFalse(value: boolean) {
+    return value === false;
   }
 }
 
