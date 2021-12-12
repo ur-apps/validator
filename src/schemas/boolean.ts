@@ -1,4 +1,5 @@
 import { messages } from '../constants';
+import { isBoolean, isNumber } from '../utils';
 import { TBaseOptions, BaseSchema } from './base';
 
 export type TBooleanOptions = TBaseOptions & {
@@ -55,7 +56,7 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     }
 
     if (value !== undefined && value !== null) {
-      if (!this.validateBoolean(value)) {
+      if (!this.validateType(value)) {
         result.valid = false;
         result.error = this.schema.type.message;
         return result;
@@ -95,7 +96,7 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
   }
 
   cast(value: any) {
-    const valid = this.validateBoolean(value);
+    const valid = this.validateType(value);
 
     if (valid) {
       return Boolean(value);
@@ -104,16 +105,15 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     throw new TypeError(messages.boolean);
   }
 
-  protected validateRequired(value: any): boolean {
-    if (value !== undefined && value !== null) return true;
+  private validateType(value: any): boolean {
+    if (isBoolean(value)) return true;
+    if (!this.schema.type.strict && isNumber(value) && (value === 0 || value === 1)) return true;
 
     return false;
   }
 
-  private validateBoolean(value: any): boolean {
-    if (typeof value === 'boolean') return true;
-    if (value instanceof Boolean) return true;
-    if (!this.schema.type.strict && typeof value === 'number' && (value === 0 || value === 1)) return true;
+  private validateRequired(value: any): boolean {
+    if (value !== undefined && value !== null) return true;
 
     return false;
   }

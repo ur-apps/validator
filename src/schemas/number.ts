@@ -1,4 +1,5 @@
 import { messages } from '../constants';
+import { isNumber, isString } from '../utils';
 import { TBaseOptions, BaseSchema } from './base';
 
 export type TNumberOptions = TBaseOptions & {
@@ -105,16 +106,15 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
     throw new TypeError(messages.number);
   }
 
-  protected validateRequired(value: any): boolean {
-    if (value !== undefined && value !== null && value !== '') return true;
+  private validateType(value: any): boolean {
+    if (isNumber(value)) return true;
+    if (!this.schema.type.strict && isString(value) && value.trim() && !Number.isNaN(+value)) return true;
 
     return false;
   }
 
-  private validateType(value: any): boolean {
-    if (typeof value === 'number' && !Number.isNaN(value)) return true;
-    if (value instanceof Number && !Number.isNaN(value)) return true;
-    if (!this.schema.type.strict && typeof value === 'string' && value.trim() && !Number.isNaN(+value)) return true;
+  private validateRequired(value: any): boolean {
+    if (value !== undefined && value !== null && value !== '') return true;
 
     return false;
   }

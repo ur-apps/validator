@@ -1,4 +1,5 @@
 import { messages } from '../constants';
+import { isNumber, isString } from '../utils';
 import { TBaseOptions, BaseSchema } from './base';
 
 export type TStringOptions = TBaseOptions & {
@@ -136,15 +137,15 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     throw new TypeError(messages.string);
   }
 
-  protected validateRequired(value: any): boolean {
-    if (value !== undefined && value !== null && value !== '') return true;
+  private validateType(value: any): boolean {
+    if (isString(value)) return true;
+    if (!this.schema.type.strict && isNumber(value)) return true;
 
     return false;
   }
 
-  private validateType(value: any): boolean {
-    if (this.isString(value)) return true;
-    if (!this.schema.type.strict && this.isNumber(value)) return true;
+  private validateRequired(value: any): boolean {
+    if (value !== undefined && value !== null && value !== '') return true;
 
     return false;
   }
