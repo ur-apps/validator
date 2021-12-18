@@ -2,7 +2,7 @@ import { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TString
 
 export { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions };
 
-export type TDataTypes = 'string' | 'number' | 'boolean' | 'object' | 'array';
+export type TDataTypes = 'array' | 'boolean' | 'number' | 'object' | 'string';
 
 export type TValidationSchema<TValues extends Record<string, any> = Record<string, any>> = {
   [key in keyof TValues]?: TFieldOptions;
@@ -34,6 +34,11 @@ export type TValidationMessages = {
 
 export type TDefaultMessages = {
   type: string;
+  string: string;
+  number: string;
+  boolean: string;
+  object: string;
+  array: string;
   required: string;
   length: (length: number) => string;
   short: (length: number) => string;
@@ -45,6 +50,8 @@ export type TDefaultMessages = {
   large: (max: number) => string;
   format: string;
   unequal: (relField: string) => string;
+  true: string;
+  false: string;
 };
 
 export type TValidationResult<TValues> = {
