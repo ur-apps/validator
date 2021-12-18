@@ -1,6 +1,6 @@
 {
   "name": "gvalid",
-  "version": "1.0.5",
+  "version": "2.0.0-beta.0",
   "description": "JavaScript and TypeScript validation library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
