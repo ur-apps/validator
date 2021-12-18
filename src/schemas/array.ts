@@ -2,6 +2,7 @@ import { TBaseOptions, BaseSchema } from './base';
 import { clone, isArray } from '../utils';
 import { messages } from '../constants';
 import type { BooleanSchema, NumberSchema, ObjectSchema, StringSchema } from '../schemas';
+import type { TValidationResult } from '../types';
 
 export type TArrayOptions = TBaseOptions & {
   length?: { value: number; message: string };
@@ -11,18 +12,6 @@ export type TArrayOptions = TBaseOptions & {
 };
 
 type TArrayEntry = ArraySchema | BooleanSchema | NumberSchema | ObjectSchema | StringSchema;
-
-type TError =
-  | string
-  | {
-      [key: string]: TError;
-    };
-
-type TValidationResult = {
-  valid: boolean;
-  value: any;
-  error: TError;
-};
 
 export class ArraySchema extends BaseSchema<TArrayOptions> {
   constructor(message?: string) {
@@ -58,7 +47,7 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
     return this;
   }
 
-  validate(value: Array<any>) {
+  validate(value: any) {
     const result: TValidationResult = {
       valid: true,
       value: value,
@@ -129,11 +118,11 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
     return result;
   }
 
-  isValid(values: any[]) {
+  isValid(values: any) {
     return this.validate(values).valid;
   }
 
-  cast(value: any[]) {
+  cast(value: any) {
     if (isArray(value)) {
       const validation = this.validate(value);
 

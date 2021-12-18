@@ -2,24 +2,13 @@ import { TBaseOptions, BaseSchema } from './base';
 import { clone, isObject } from '../utils';
 import { messages } from '../constants';
 import type { ArraySchema, BooleanSchema, NumberSchema, StringSchema } from '../schemas';
+import type { TValidationResult } from '../types';
 
 export type TObjectOptions = TBaseOptions & {
   entries?: TObjectEntries;
 };
 
 type TObjectEntries = Record<string, ArraySchema | BooleanSchema | NumberSchema | StringSchema | ObjectSchema>;
-
-type TError =
-  | string
-  | {
-      [key: string]: TError;
-    };
-
-type TValidationResult = {
-  valid: boolean;
-  value: any;
-  error: TError;
-};
 
 export class ObjectSchema extends BaseSchema<TObjectOptions> {
   constructor(message?: string) {
@@ -31,7 +20,7 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     return this;
   }
 
-  validate(value: Record<string, any>) {
+  validate(value: any) {
     const result: TValidationResult = {
       valid: true,
       value: value,
@@ -72,11 +61,11 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     return result;
   }
 
-  isValid(value: Record<string, any>) {
+  isValid(value: any) {
     return this.validate(value).valid;
   }
 
-  cast(value: Record<string, any>) {
+  cast(value: any) {
     if (isObject(value)) {
       const validation = this.validate(value);
 

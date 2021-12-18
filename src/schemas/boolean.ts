@@ -1,16 +1,11 @@
-import { messages } from '../constants';
-import { isBoolean, isNumber } from '../utils';
 import { TBaseOptions, BaseSchema } from './base';
+import { isBoolean, isNumber } from '../utils';
+import { messages } from '../constants';
+import type { TPrimitiveValidationResult as TValidationResult } from '../types';
 
 export type TBooleanOptions = TBaseOptions & {
   isTrue?: { value: boolean; message: string };
   isFalse?: { value: boolean; message: string };
-};
-
-type TValidationResult = {
-  valid: boolean;
-  value: any;
-  error: string;
 };
 
 export class BooleanSchema extends BaseSchema<TBooleanOptions> {
@@ -118,15 +113,13 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
 
   private validateType(value: any): boolean {
     if (isBoolean(value)) return true;
-    if (!this.schema.type.strict && isNumber(value) && (value === 0 || value === 1)) return true;
+    if (!this.schema.type.strict && isNumber(value) && (+value === 0 || +value === 1)) return true;
 
     return false;
   }
 
   private validateRequired(value: any): boolean {
-    if (value !== undefined && value !== null) return true;
-
-    return false;
+    return value !== undefined && value !== null;
   }
 
   private validateIsTrue(value: boolean) {

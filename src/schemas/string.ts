@@ -1,18 +1,13 @@
-import { messages } from '../constants';
-import { isNumber, isString } from '../utils';
 import { TBaseOptions, BaseSchema } from './base';
+import { isNumber, isString } from '../utils';
+import { messages } from '../constants';
+import type { TPrimitiveValidationResult as TValidationResult } from '../types';
 
 export type TStringOptions = TBaseOptions & {
   length?: { value: number; message: string };
   minLength?: { value: number; message: string };
   maxLength?: { value: number; message: string };
   match?: { value: RegExp; message: string };
-};
-
-type TValidationResult = {
-  valid: boolean;
-  value: any;
-  error: string;
 };
 
 export class StringSchema extends BaseSchema<TStringOptions> {
@@ -51,9 +46,9 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     return this;
   }
 
-  match(value: RegExp, message?: string) {
+  match(regexp: RegExp, message?: string) {
     this.schema.match = {
-      value,
+      value: regexp,
       message: message ?? messages.format,
     };
     return this;
@@ -145,27 +140,19 @@ export class StringSchema extends BaseSchema<TStringOptions> {
   }
 
   private validateRequired(value: any): boolean {
-    if (value !== undefined && value !== null && value !== '') return true;
-
-    return false;
+    return value !== undefined && value !== null && value !== '';
   }
 
   private validateLength(value: string, length: number): boolean {
-    if (value.length === length) return true;
-
-    return false;
+    return value.length === length;
   }
 
   private validateMinLength(value: string, min: number): boolean {
-    if (value.length >= min) return true;
-
-    return false;
+    return value.length >= min;
   }
 
   private validateMaxLength(value: string, max: number): boolean {
-    if (value.length <= max) return true;
-
-    return false;
+    return value.length <= max;
   }
 
   private validateMatch(value: string, regexp: RegExp): boolean {

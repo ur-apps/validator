@@ -4,32 +4,22 @@ export { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TString
 
 export type TDataTypes = 'array' | 'boolean' | 'number' | 'object' | 'string';
 
-export type TValidationSchema<TValues extends Record<string, any> = Record<string, any>> = {
-  [key in keyof TValues]?: TFieldOptions;
+export type TError =
+  | string
+  | {
+      [key: string]: TError;
+    };
+
+export type TValidationResult = {
+  valid: boolean;
+  value: any;
+  error: TError;
 };
 
-export type TFieldOptions = {
-  type: { value: 'string' | 'number' | 'boolean'; message?: string };
-  required?: { value: boolean; message?: string };
-  length?: { value: number; message?: string };
-  minLength?: { value: number; message?: string };
-  maxLength?: { value: number; message?: string };
-  min?: { value: number; message?: string };
-  max?: { value: number; message?: string };
-  pattern?: { value: RegExp; message?: string };
-  equalField?: { name: string; message?: string };
-};
-
-export type TValidationMessages = {
-  type: string;
-  required: string;
-  length: string | ((length: number) => string);
-  short: string | ((length: number) => string);
-  long: string | ((length: number) => string);
-  small: string | ((min: number) => string);
-  large: string | ((max: number) => string);
-  format: string;
-  unequal: string | ((relField: string) => string);
+export type TPrimitiveValidationResult = {
+  valid: boolean;
+  value: any;
+  error: string;
 };
 
 export type TDefaultMessages = {
@@ -52,14 +42,4 @@ export type TDefaultMessages = {
   unequal: (relField: string) => string;
   true: string;
   false: string;
-};
-
-export type TValidationResult<TValues> = {
-  valid: boolean;
-  errors: TErrors<TValues>;
-  values: TValues;
-};
-
-export type TErrors<T = Record<string, string>> = {
-  [key in keyof T]?: string;
 };
