@@ -54,6 +54,11 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     return this;
   }
 
+  /**
+   * Validates value and returns the validation result in TValidationResult format
+   * @param value any
+   * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message (if invalid) }
+   */
   validate(value: any): TValidationResult {
     const result = {
       valid: true,
@@ -118,10 +123,21 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     return result;
   }
 
+  /**
+   * Validates value and returns the validation result in boolean format
+   * @param value any
+   * @returns {boolean} true or false
+   */
   isValid(value: any): boolean {
     return this.validate(value).valid;
   }
 
+  /**
+   * Casts the value to the string format (if strict mode is not enabled)
+   * @description the cast method can cast only number
+   * @param {string | number} value  that can be cast to a string (if strict mode is not enabled)
+   * @returns string or an error if the value is not valid
+   */
   cast(value: any): string {
     const valid = this.validateType(value);
 

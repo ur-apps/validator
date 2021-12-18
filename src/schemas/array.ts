@@ -47,7 +47,12 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
     return this;
   }
 
-  validate(value: any) {
+  /**
+   * Validates value and returns the validation result in TValidationResult format
+   * @param value any
+   * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message or object with items errors (if invalid) }
+   */
+  validate(value: any): TValidationResult {
     const result: TValidationResult = {
       valid: true,
       value: value,
@@ -118,10 +123,20 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
     return result;
   }
 
-  isValid(values: any) {
+  /**
+   * Validates value and returns the validation result in boolean format
+   * @param value any
+   * @returns {boolean} true or false
+   */
+  isValid(values: any): boolean {
     return this.validate(values).valid;
   }
 
+  /**
+   * Casts the array and its values to the format specified in the schema (if strict mode is not enabled)
+   * @param value an array with data that can be cast to the type specified in the schema
+   * @returns array with cast data or an error if the data is not valid
+   */
   cast(value: any) {
     if (isArray(value)) {
       const validation = this.validate(value);

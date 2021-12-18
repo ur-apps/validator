@@ -36,6 +36,11 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
     return this;
   }
 
+  /**
+   * Validates value and returns the validation result in TValidationResult format
+   * @param value any
+   * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message (if invalid) }
+   */
   validate(value: any): TValidationResult {
     const result = {
       valid: true,
@@ -87,10 +92,21 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
     return result;
   }
 
+  /**
+   * Validates value and returns the validation result in boolean format
+   * @param value any
+   * @returns {boolean} true or false
+   */
   isValid(value: any): boolean {
     return this.validate(value).valid;
   }
 
+  /**
+   * Casts the value to the number format (if strict mode is not enabled)
+   * @description the cast method can cast only string with numbers (no letters or symbols)
+   * @param {number | string} value  that can be cast to a number (if strict mode is not enabled)
+   * @returns number or an error if the value is not valid
+   */
   cast(value: any): number {
     const valid = this.validateType(value);
 

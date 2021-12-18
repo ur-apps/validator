@@ -44,6 +44,11 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     return this;
   }
 
+  /**
+   * Validates value and returns the validation result in TValidationResult format
+   * @param value any
+   * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message (if invalid) }
+   */
   validate(value: any): TValidationResult {
     const result = {
       valid: true,
@@ -97,11 +102,22 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     return result;
   }
 
-  isValid(value: any) {
+  /**
+   * Validates value and returns the validation result in boolean format
+   * @param value any
+   * @returns {boolean} true or false
+   */
+  isValid(value: any): boolean {
     return this.validate(value).valid;
   }
 
-  cast(value: any) {
+  /**
+   * Casts the value to the boolean format (if strict mode is not enabled)
+   * @description the cast method can cast only number 1 (true) or 0 (false)
+   * @param {boolean | 0 | 1} value  that can be cast to a boolean (if strict mode is not enabled)
+   * @returns boolean or an error if the value is not valid
+   */
+  cast(value: any): boolean {
     const valid = this.validateType(value);
 
     if (valid) {
