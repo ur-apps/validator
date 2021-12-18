@@ -1,18 +1,13 @@
-import { messages } from '../constants';
-import { isNumber, isString } from '../utils';
 import { TBaseOptions, BaseSchema } from './base';
+import { isNumber, isString } from '../utils';
+import { messages } from '../constants';
+import type { TPrimitiveValidationResult as TValidationResult } from '../types';
 
 export type TStringOptions = TBaseOptions & {
   length?: { value: number; message: string };
   minLength?: { value: number; message: string };
   maxLength?: { value: number; message: string };
   match?: { value: RegExp; message: string };
-};
-
-type TValidationResult = {
-  valid: boolean;
-  value: any;
-  error: string;
 };
 
 export class StringSchema extends BaseSchema<TStringOptions> {
@@ -51,14 +46,19 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     return this;
   }
 
-  match(value: RegExp, message?: string) {
+  match(regexp: RegExp, message?: string) {
     this.schema.match = {
-      value,
+      value: regexp,
       message: message ?? messages.format,
     };
     return this;
   }
 
+  /**
+   * Validates value and returns the validation result in TValidationResult format
+   * @param value any
+   * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message (if invalid) }
+   */
   validate(value: any): TValidationResult {
     const result = {
       valid: true,
@@ -123,10 +123,21 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     return result;
   }
 
+  /**
+   * Validates value and returns the validation result in boolean format
+   * @param value any
+   * @returns {boolean} true or false
+   */
   isValid(value: any): boolean {
     return this.validate(value).valid;
   }
 
+  /**
+   * Casts the value to the string format (if strict mode is not enabled)
+   * @description the cast method can cast only number
+   * @param {string | number} value  that can be cast to a string (if strict mode is not enabled)
+   * @returns string or an error if the value is not valid
+   */
   cast(value: any): string {
     const valid = this.validateType(value);
 
@@ -145,27 +156,19 @@ export class StringSchema extends BaseSchema<TStringOptions> {
   }
 
   private validateRequired(value: any): boolean {
-    if (value !== undefined && value !== null && value !== '') return true;
-
-    return false;
+    return value !== undefined && value !== null && value !== '';
   }
 
   private validateLength(value: string, length: number): boolean {
-    if (value.length === length) return true;
-
-    return false;
+    return value.length === length;
   }
 
   private validateMinLength(value: string, min: number): boolean {
-    if (value.length >= min) return true;
-
-    return false;
+    return value.length >= min;
   }
 
   private validateMaxLength(value: string, max: number): boolean {
-    if (value.length <= max) return true;
-
-    return false;
+    return value.length <= max;
   }
 
   private validateMatch(value: string, regexp: RegExp): boolean {

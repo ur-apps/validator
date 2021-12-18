@@ -10,14 +10,13 @@ export abstract class BaseSchema<T extends TBaseOptions> {
   protected readonly schema: T;
 
   constructor(type: TDataTypes, message?: string) {
-    // @ts-ignore
     this.schema = {
       type: {
         value: type,
         strict: false,
         message: message ?? messages.type,
       },
-    };
+    } as T;
   }
 
   required(message?: string) {
@@ -35,8 +34,4 @@ export abstract class BaseSchema<T extends TBaseOptions> {
     };
     return this;
   }
-
-  // end(): T {
-  //   return this.schema;
-  // }
 }

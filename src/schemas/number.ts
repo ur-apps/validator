@@ -1,16 +1,11 @@
-import { messages } from '../constants';
-import { isNumber, isString } from '../utils';
 import { TBaseOptions, BaseSchema } from './base';
+import { isNumber, isString } from '../utils';
+import { messages } from '../constants';
+import type { TPrimitiveValidationResult as TValidationResult } from '../types';
 
 export type TNumberOptions = TBaseOptions & {
   min?: { value: number; message: string };
   max?: { value: number; message: string };
-};
-
-type TValidationResult = {
-  valid: boolean;
-  value: any;
-  error: string;
 };
 
 export class NumberSchema extends BaseSchema<TNumberOptions> {
@@ -41,6 +36,11 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
     return this;
   }
 
+  /**
+   * Validates value and returns the validation result in TValidationResult format
+   * @param value any
+   * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message (if invalid) }
+   */
   validate(value: any): TValidationResult {
     const result = {
       valid: true,
@@ -92,10 +92,21 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
     return result;
   }
 
+  /**
+   * Validates value and returns the validation result in boolean format
+   * @param value any
+   * @returns {boolean} true or false
+   */
   isValid(value: any): boolean {
     return this.validate(value).valid;
   }
 
+  /**
+   * Casts the value to the number format (if strict mode is not enabled)
+   * @description the cast method can cast only string with numbers (no letters or symbols)
+   * @param {number | string} value  that can be cast to a number (if strict mode is not enabled)
+   * @returns number or an error if the value is not valid
+   */
   cast(value: any): number {
     const valid = this.validateType(value);
 
@@ -114,21 +125,15 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
   }
 
   private validateRequired(value: any): boolean {
-    if (value !== undefined && value !== null && value !== '') return true;
-
-    return false;
+    return value !== undefined && value !== null && value !== '';
   }
 
   private validateMin(value: number, min: number): boolean {
-    if (value >= min) return true;
-
-    return false;
+    return value >= min;
   }
 
   private validateMax(value: number, max: number): boolean {
-    if (value <= max) return true;
-
-    return false;
+    return value <= max;
   }
 }
 

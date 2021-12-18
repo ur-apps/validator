@@ -2,24 +2,13 @@ import { TBaseOptions, BaseSchema } from './base';
 import { clone, isObject } from '../utils';
 import { messages } from '../constants';
 import type { ArraySchema, BooleanSchema, NumberSchema, StringSchema } from '../schemas';
+import type { TValidationResult } from '../types';
 
 export type TObjectOptions = TBaseOptions & {
   entries?: TObjectEntries;
 };
 
 type TObjectEntries = Record<string, ArraySchema | BooleanSchema | NumberSchema | StringSchema | ObjectSchema>;
-
-type TError =
-  | string
-  | {
-      [key: string]: TError;
-    };
-
-type TValidationResult = {
-  valid: boolean;
-  value: any;
-  error: TError;
-};
 
 export class ObjectSchema extends BaseSchema<TObjectOptions> {
   constructor(message?: string) {
@@ -31,7 +20,12 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     return this;
   }
 
-  validate(value: Record<string, any>) {
+  /**
+   * Validates value and returns the validation result in TValidationResult format
+   * @param value any
+   * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message or object with property errors (if invalid) }
+   */
+  validate(value: any): TValidationResult {
     const result: TValidationResult = {
       valid: true,
       value: value,
@@ -72,11 +66,21 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     return result;
   }
 
-  isValid(value: Record<string, any>) {
+  /**
+   * Validates value and returns the validation result in boolean format
+   * @param value any
+   * @returns {boolean} true or false
+   */
+  isValid(value: any): boolean {
     return this.validate(value).valid;
   }
 
-  cast(value: Record<string, any>) {
+  /**
+   * Casts the object and its values to the format specified in the schema (if strict mode is not enabled)
+   * @param value an object with data that can be cast to the type specified in the schema
+   * @returns object with cast data or an error if the data is not valid
+   */
+  cast(value: any) {
     if (isObject(value)) {
       const validation = this.validate(value);
 

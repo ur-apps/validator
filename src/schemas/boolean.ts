@@ -1,16 +1,11 @@
-import { messages } from '../constants';
-import { isBoolean, isNumber } from '../utils';
 import { TBaseOptions, BaseSchema } from './base';
+import { isBoolean, isNumber } from '../utils';
+import { messages } from '../constants';
+import type { TPrimitiveValidationResult as TValidationResult } from '../types';
 
 export type TBooleanOptions = TBaseOptions & {
   isTrue?: { value: boolean; message: string };
   isFalse?: { value: boolean; message: string };
-};
-
-type TValidationResult = {
-  valid: boolean;
-  value: any;
-  error: string;
 };
 
 export class BooleanSchema extends BaseSchema<TBooleanOptions> {
@@ -49,6 +44,11 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     return this;
   }
 
+  /**
+   * Validates value and returns the validation result in TValidationResult format
+   * @param value any
+   * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message (if invalid) }
+   */
   validate(value: any): TValidationResult {
     const result = {
       valid: true,
@@ -102,11 +102,22 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
     return result;
   }
 
-  isValid(value: any) {
+  /**
+   * Validates value and returns the validation result in boolean format
+   * @param value any
+   * @returns {boolean} true or false
+   */
+  isValid(value: any): boolean {
     return this.validate(value).valid;
   }
 
-  cast(value: any) {
+  /**
+   * Casts the value to the boolean format (if strict mode is not enabled)
+   * @description the cast method can cast only number 1 (true) or 0 (false)
+   * @param {boolean | 0 | 1} value  that can be cast to a boolean (if strict mode is not enabled)
+   * @returns boolean or an error if the value is not valid
+   */
+  cast(value: any): boolean {
     const valid = this.validateType(value);
 
     if (valid) {
@@ -118,15 +129,13 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
 
   private validateType(value: any): boolean {
     if (isBoolean(value)) return true;
-    if (!this.schema.type.strict && isNumber(value) && (value === 0 || value === 1)) return true;
+    if (!this.schema.type.strict && isNumber(value) && (+value === 0 || +value === 1)) return true;
 
     return false;
   }
 
   private validateRequired(value: any): boolean {
-    if (value !== undefined && value !== null) return true;
-
-    return false;
+    return value !== undefined && value !== null;
   }
 
   private validateIsTrue(value: boolean) {
