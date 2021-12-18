@@ -1,259 +1,5 @@
 import { boolean, messages } from '../lib';
 
-describe('Schema: BooleanSchema / method: end()', () => {
-  test('default messages', () => {
-    expect(boolean().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-    });
-
-    expect(boolean().strict().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: true,
-        message: messages.boolean,
-      },
-    });
-
-    expect(boolean().required().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-      required: {
-        value: true,
-        message: messages.required,
-      },
-    });
-
-    expect(boolean().notRequired().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-      required: {
-        value: false,
-        message: '',
-      },
-    });
-
-    expect(boolean().required().notRequired().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-      required: {
-        value: false,
-        message: '',
-      },
-    });
-
-    expect(boolean().notRequired().required().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-      required: {
-        value: true,
-        message: messages.required,
-      },
-    });
-
-    expect(boolean().isTrue().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-      isTrue: {
-        value: true,
-        message: messages.true,
-      },
-    });
-
-    expect(boolean().isFalse().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-      isFalse: {
-        value: true,
-        message: messages.false,
-      },
-    });
-
-    expect(boolean().isTrue().isFalse().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-      isTrue: {
-        value: false,
-        message: messages.true,
-      },
-      isFalse: {
-        value: true,
-        message: messages.false,
-      },
-    });
-
-    expect(boolean().isFalse().isTrue().end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: messages.boolean,
-      },
-      isFalse: {
-        value: false,
-        message: messages.false,
-      },
-      isTrue: {
-        value: true,
-        message: messages.true,
-      },
-    });
-  });
-
-  test('custom messages', () => {
-    expect(boolean('custom type message').end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-    });
-
-    expect(boolean('custom type message').strict('custom strict message').end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: true,
-        message: 'custom strict message',
-      },
-    });
-
-    expect(boolean('custom type message').required('custom requred message').end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: true,
-        message: 'custom requred message',
-      },
-    });
-
-    expect(boolean('custom type message').notRequired('custom not requred message').end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: false,
-        message: 'custom not requred message',
-      },
-    });
-
-    expect(
-      boolean('custom type message').required('custom requred message').notRequired('custom not requred message').end()
-    ).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: false,
-        message: 'custom not requred message',
-      },
-    });
-
-    expect(
-      boolean('custom type message').notRequired('custom not requred message').required('custom requred message').end()
-    ).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: true,
-        message: 'custom requred message',
-      },
-    });
-
-    expect(boolean('custom type message').isTrue('custom isTrue message').end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-      isTrue: {
-        value: true,
-        message: 'custom isTrue message',
-      },
-    });
-
-    expect(boolean('custom type message').isFalse('custom isFalse message').end()).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-      isFalse: {
-        value: true,
-        message: 'custom isFalse message',
-      },
-    });
-
-    expect(
-      boolean('custom type message').isTrue('custom isTrue message').isFalse('custom isFalse message').end()
-    ).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-      isTrue: {
-        value: false,
-        message: 'custom isTrue message',
-      },
-      isFalse: {
-        value: true,
-        message: 'custom isFalse message',
-      },
-    });
-
-    expect(
-      boolean('custom type message').isFalse('custom isFalse message').isTrue('custom isTrue message').end()
-    ).toEqual({
-      type: {
-        value: 'boolean',
-        strict: false,
-        message: 'custom type message',
-      },
-      isFalse: {
-        value: false,
-        message: 'custom isFalse message',
-      },
-      isTrue: {
-        value: true,
-        message: 'custom isTrue message',
-      },
-    });
-  });
-});
-
 describe('Schema: BooleanSchema / method: validate()', () => {
   test('default messages: not strict', () => {
     expect(boolean().validate(true)).toEqual({
@@ -1151,3 +897,257 @@ describe('Schema: BooleanSchema / method: cast()', () => {
     expect(() => boolean().cast({})).toThrowError(new TypeError(messages.boolean));
   });
 });
+
+// describe('Schema: BooleanSchema / method: end()', () => {
+//   test('default messages', () => {
+//     expect(boolean().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//     });
+
+//     expect(boolean().strict().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: true,
+//         message: messages.boolean,
+//       },
+//     });
+
+//     expect(boolean().required().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//       required: {
+//         value: true,
+//         message: messages.required,
+//       },
+//     });
+
+//     expect(boolean().notRequired().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//       required: {
+//         value: false,
+//         message: '',
+//       },
+//     });
+
+//     expect(boolean().required().notRequired().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//       required: {
+//         value: false,
+//         message: '',
+//       },
+//     });
+
+//     expect(boolean().notRequired().required().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//       required: {
+//         value: true,
+//         message: messages.required,
+//       },
+//     });
+
+//     expect(boolean().isTrue().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//       isTrue: {
+//         value: true,
+//         message: messages.true,
+//       },
+//     });
+
+//     expect(boolean().isFalse().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//       isFalse: {
+//         value: true,
+//         message: messages.false,
+//       },
+//     });
+
+//     expect(boolean().isTrue().isFalse().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//       isTrue: {
+//         value: false,
+//         message: messages.true,
+//       },
+//       isFalse: {
+//         value: true,
+//         message: messages.false,
+//       },
+//     });
+
+//     expect(boolean().isFalse().isTrue().end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: messages.boolean,
+//       },
+//       isFalse: {
+//         value: false,
+//         message: messages.false,
+//       },
+//       isTrue: {
+//         value: true,
+//         message: messages.true,
+//       },
+//     });
+//   });
+
+//   test('custom messages', () => {
+//     expect(boolean('custom type message').end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//     });
+
+//     expect(boolean('custom type message').strict('custom strict message').end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: true,
+//         message: 'custom strict message',
+//       },
+//     });
+
+//     expect(boolean('custom type message').required('custom requred message').end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: true,
+//         message: 'custom requred message',
+//       },
+//     });
+
+//     expect(boolean('custom type message').notRequired('custom not requred message').end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: false,
+//         message: 'custom not requred message',
+//       },
+//     });
+
+//     expect(
+//       boolean('custom type message').required('custom requred message').notRequired('custom not requred message').end()
+//     ).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: false,
+//         message: 'custom not requred message',
+//       },
+//     });
+
+//     expect(
+//       boolean('custom type message').notRequired('custom not requred message').required('custom requred message').end()
+//     ).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: true,
+//         message: 'custom requred message',
+//       },
+//     });
+
+//     expect(boolean('custom type message').isTrue('custom isTrue message').end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       isTrue: {
+//         value: true,
+//         message: 'custom isTrue message',
+//       },
+//     });
+
+//     expect(boolean('custom type message').isFalse('custom isFalse message').end()).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       isFalse: {
+//         value: true,
+//         message: 'custom isFalse message',
+//       },
+//     });
+
+//     expect(
+//       boolean('custom type message').isTrue('custom isTrue message').isFalse('custom isFalse message').end()
+//     ).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       isTrue: {
+//         value: false,
+//         message: 'custom isTrue message',
+//       },
+//       isFalse: {
+//         value: true,
+//         message: 'custom isFalse message',
+//       },
+//     });
+
+//     expect(
+//       boolean('custom type message').isFalse('custom isFalse message').isTrue('custom isTrue message').end()
+//     ).toEqual({
+//       type: {
+//         value: 'boolean',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       isFalse: {
+//         value: false,
+//         message: 'custom isFalse message',
+//       },
+//       isTrue: {
+//         value: true,
+//         message: 'custom isTrue message',
+//       },
+//     });
+//   });
+// });

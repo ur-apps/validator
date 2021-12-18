@@ -1,191 +1,5 @@
 import { number, messages } from '../lib';
 
-describe('Schema: NumberSchema / method: end()', () => {
-  test('default messages', () => {
-    expect(number().end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: messages.number,
-      },
-    });
-
-    expect(number().strict().end()).toEqual({
-      type: {
-        value: 'number',
-        strict: true,
-        message: messages.number,
-      },
-    });
-
-    expect(number().required().end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: messages.number,
-      },
-      required: {
-        value: true,
-        message: messages.required,
-      },
-    });
-
-    expect(number().notRequired().end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: messages.number,
-      },
-      required: {
-        value: false,
-        message: '',
-      },
-    });
-
-    expect(number().required().notRequired().end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: messages.number,
-      },
-      required: {
-        value: false,
-        message: '',
-      },
-    });
-
-    expect(number().notRequired().required().end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: messages.number,
-      },
-      required: {
-        value: true,
-        message: messages.required,
-      },
-    });
-
-    expect(number().min(2).end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: messages.number,
-      },
-      min: {
-        value: 2,
-        message: messages.small(2),
-      },
-    });
-
-    expect(number().max(20).end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: messages.number,
-      },
-      max: {
-        value: 20,
-        message: messages.large(20),
-      },
-    });
-  });
-
-  test('custom messages', () => {
-    expect(number('custom type message').end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: 'custom type message',
-      },
-    });
-
-    expect(number('custom type message').strict('custom strict message').end()).toEqual({
-      type: {
-        value: 'number',
-        strict: true,
-        message: 'custom strict message',
-      },
-    });
-
-    expect(number('custom type message').required('custom requred message').end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: true,
-        message: 'custom requred message',
-      },
-    });
-
-    expect(number('custom type message').notRequired('custom not requred message').end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: false,
-        message: 'custom not requred message',
-      },
-    });
-
-    expect(
-      number('custom type message').required('custom requred message').notRequired('custom not requred message').end()
-    ).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: false,
-        message: 'custom not requred message',
-      },
-    });
-
-    expect(
-      number('custom type message').notRequired('custom not requred message').required('custom requred message').end()
-    ).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: true,
-        message: 'custom requred message',
-      },
-    });
-
-    expect(number('custom type message').min(2, 'custom min message').end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: 'custom type message',
-      },
-      min: {
-        value: 2,
-        message: 'custom min message',
-      },
-    });
-
-    expect(number('custom type message').max(20, 'custom max message').end()).toEqual({
-      type: {
-        value: 'number',
-        strict: false,
-        message: 'custom type message',
-      },
-      max: {
-        value: 20,
-        message: 'custom max message',
-      },
-    });
-  });
-});
-
 describe('Schema: NumberSchema / method: validate()', () => {
   test('default messages: not strict', () => {
     expect(number().validate(0)).toEqual({
@@ -1252,3 +1066,189 @@ describe('Schema: NumberSchema / method: cast()', () => {
     expect(() => number().strict().cast(null)).toThrowError(new TypeError(messages.number));
   });
 });
+
+// describe('Schema: NumberSchema / method: end()', () => {
+//   test('default messages', () => {
+//     expect(number().end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: messages.number,
+//       },
+//     });
+
+//     expect(number().strict().end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: true,
+//         message: messages.number,
+//       },
+//     });
+
+//     expect(number().required().end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: messages.number,
+//       },
+//       required: {
+//         value: true,
+//         message: messages.required,
+//       },
+//     });
+
+//     expect(number().notRequired().end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: messages.number,
+//       },
+//       required: {
+//         value: false,
+//         message: '',
+//       },
+//     });
+
+//     expect(number().required().notRequired().end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: messages.number,
+//       },
+//       required: {
+//         value: false,
+//         message: '',
+//       },
+//     });
+
+//     expect(number().notRequired().required().end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: messages.number,
+//       },
+//       required: {
+//         value: true,
+//         message: messages.required,
+//       },
+//     });
+
+//     expect(number().min(2).end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: messages.number,
+//       },
+//       min: {
+//         value: 2,
+//         message: messages.small(2),
+//       },
+//     });
+
+//     expect(number().max(20).end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: messages.number,
+//       },
+//       max: {
+//         value: 20,
+//         message: messages.large(20),
+//       },
+//     });
+//   });
+
+//   test('custom messages', () => {
+//     expect(number('custom type message').end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//     });
+
+//     expect(number('custom type message').strict('custom strict message').end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: true,
+//         message: 'custom strict message',
+//       },
+//     });
+
+//     expect(number('custom type message').required('custom requred message').end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: true,
+//         message: 'custom requred message',
+//       },
+//     });
+
+//     expect(number('custom type message').notRequired('custom not requred message').end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: false,
+//         message: 'custom not requred message',
+//       },
+//     });
+
+//     expect(
+//       number('custom type message').required('custom requred message').notRequired('custom not requred message').end()
+//     ).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: false,
+//         message: 'custom not requred message',
+//       },
+//     });
+
+//     expect(
+//       number('custom type message').notRequired('custom not requred message').required('custom requred message').end()
+//     ).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: true,
+//         message: 'custom requred message',
+//       },
+//     });
+
+//     expect(number('custom type message').min(2, 'custom min message').end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       min: {
+//         value: 2,
+//         message: 'custom min message',
+//       },
+//     });
+
+//     expect(number('custom type message').max(20, 'custom max message').end()).toEqual({
+//       type: {
+//         value: 'number',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       max: {
+//         value: 20,
+//         message: 'custom max message',
+//       },
+//     });
+//   });
+// });

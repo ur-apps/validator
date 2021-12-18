@@ -1,165 +1,5 @@
 import { array, boolean, number, object, string, messages } from '../lib';
 
-describe('Schema: ArraySchema / method: end()', () => {
-  test('default messages', () => {
-    expect(array().end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: messages.array,
-      },
-    });
-
-    expect(array().required().end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: messages.array,
-      },
-      required: {
-        value: true,
-        message: messages.required,
-      },
-    });
-
-    expect(array().notRequired().end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: messages.array,
-      },
-      required: {
-        value: false,
-        message: '',
-      },
-    });
-
-    expect(array().length(2).end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: messages.array,
-      },
-      length: {
-        value: 2,
-        message: messages.length(2),
-      },
-    });
-
-    expect(array().minLength(2).end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: messages.array,
-      },
-      minLength: {
-        value: 2,
-        message: messages.short(2),
-      },
-    });
-
-    expect(array().maxLength(20).end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: messages.array,
-      },
-      maxLength: {
-        value: 20,
-        message: messages.long(20),
-      },
-    });
-
-    expect(array().of(string()).end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: messages.array,
-      },
-      entry: string(),
-    });
-  });
-
-  test('custom messages', () => {
-    expect(array('custom type message').end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: 'custom type message',
-      },
-    });
-
-    expect(array('custom type message').required('custom requred message').end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: true,
-        message: 'custom requred message',
-      },
-    });
-
-    expect(array('custom type message').notRequired('custom not requred message').end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: false,
-        message: 'custom not requred message',
-      },
-    });
-
-    expect(array('custom type message').length(2, 'custom length message').end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: 'custom type message',
-      },
-      length: {
-        value: 2,
-        message: 'custom length message',
-      },
-    });
-
-    expect(array('custom type message').minLength(2, 'custom minLength message').end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: 'custom type message',
-      },
-      minLength: {
-        value: 2,
-        message: 'custom minLength message',
-      },
-    });
-
-    expect(array('custom type message').maxLength(20, 'custom maxLength message').end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: 'custom type message',
-      },
-      maxLength: {
-        value: 20,
-        message: 'custom maxLength message',
-      },
-    });
-
-    expect(array('custom type message').of(string()).end()).toEqual({
-      type: {
-        value: 'array',
-        strict: false,
-        message: 'custom type message',
-      },
-      entry: string(),
-    });
-  });
-});
-
 describe('Schema: ArraySchema / method: validate()', () => {
   test('default messages: simple', () => {
     expect(array().validate([])).toEqual({
@@ -890,3 +730,163 @@ describe('Schema: ArraySchema / method: cast()', () => {
     ).toThrowError(new TypeError(JSON.stringify({ 0: { 0: messages.number } }, undefined, 2)));
   });
 });
+
+// describe('Schema: ArraySchema / method: end()', () => {
+//   test('default messages', () => {
+//     expect(array().end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: messages.array,
+//       },
+//     });
+
+//     expect(array().required().end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: messages.array,
+//       },
+//       required: {
+//         value: true,
+//         message: messages.required,
+//       },
+//     });
+
+//     expect(array().notRequired().end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: messages.array,
+//       },
+//       required: {
+//         value: false,
+//         message: '',
+//       },
+//     });
+
+//     expect(array().length(2).end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: messages.array,
+//       },
+//       length: {
+//         value: 2,
+//         message: messages.length(2),
+//       },
+//     });
+
+//     expect(array().minLength(2).end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: messages.array,
+//       },
+//       minLength: {
+//         value: 2,
+//         message: messages.short(2),
+//       },
+//     });
+
+//     expect(array().maxLength(20).end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: messages.array,
+//       },
+//       maxLength: {
+//         value: 20,
+//         message: messages.long(20),
+//       },
+//     });
+
+//     expect(array().of(string()).end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: messages.array,
+//       },
+//       entry: string(),
+//     });
+//   });
+
+//   test('custom messages', () => {
+//     expect(array('custom type message').end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//     });
+
+//     expect(array('custom type message').required('custom requred message').end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: true,
+//         message: 'custom requred message',
+//       },
+//     });
+
+//     expect(array('custom type message').notRequired('custom not requred message').end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: false,
+//         message: 'custom not requred message',
+//       },
+//     });
+
+//     expect(array('custom type message').length(2, 'custom length message').end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       length: {
+//         value: 2,
+//         message: 'custom length message',
+//       },
+//     });
+
+//     expect(array('custom type message').minLength(2, 'custom minLength message').end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       minLength: {
+//         value: 2,
+//         message: 'custom minLength message',
+//       },
+//     });
+
+//     expect(array('custom type message').maxLength(20, 'custom maxLength message').end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       maxLength: {
+//         value: 20,
+//         message: 'custom maxLength message',
+//       },
+//     });
+
+//     expect(array('custom type message').of(string()).end()).toEqual({
+//       type: {
+//         value: 'array',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       entry: string(),
+//     });
+//   });
+// });

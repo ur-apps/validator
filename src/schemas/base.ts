@@ -36,7 +36,7 @@ export abstract class BaseSchema<T extends TBaseOptions> {
     return this;
   }
 
-  end(): T {
-    return this.schema;
-  }
+  // end(): T {
+  //   return this.schema;
+  // }
 }

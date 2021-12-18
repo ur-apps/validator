@@ -1,125 +1,5 @@
 import { array, boolean, number, object, string, messages } from '../lib';
 
-describe('Schema: ObjectSchema / method: end()', () => {
-  test('default messages', () => {
-    expect(object().end()).toEqual({
-      type: {
-        value: 'object',
-        strict: false,
-        message: messages.object,
-      },
-    });
-
-    expect(object().required().end()).toEqual({
-      type: {
-        value: 'object',
-        strict: false,
-        message: messages.object,
-      },
-      required: {
-        value: true,
-        message: messages.required,
-      },
-    });
-
-    expect(object().notRequired().end()).toEqual({
-      type: {
-        value: 'object',
-        strict: false,
-        message: messages.object,
-      },
-      required: {
-        value: false,
-        message: '',
-      },
-    });
-
-    expect(
-      object()
-        .entries({
-          array: array(),
-          boolean: boolean(),
-          number: number(),
-          object: object(),
-          string: string(),
-        })
-        .end()
-    ).toEqual({
-      type: {
-        value: 'object',
-        strict: false,
-        message: messages.object,
-      },
-      entries: {
-        array: array(),
-        boolean: boolean(),
-        number: number(),
-        object: object(),
-        string: string(),
-      },
-    });
-  });
-
-  test('custom messages', () => {
-    expect(object('custom type message').end()).toEqual({
-      type: {
-        value: 'object',
-        strict: false,
-        message: 'custom type message',
-      },
-    });
-
-    expect(object('custom type message').required('custom requred message').end()).toEqual({
-      type: {
-        value: 'object',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: true,
-        message: 'custom requred message',
-      },
-    });
-
-    expect(object('custom type message').notRequired('custom not requred message').end()).toEqual({
-      type: {
-        value: 'object',
-        strict: false,
-        message: 'custom type message',
-      },
-      required: {
-        value: false,
-        message: 'custom not requred message',
-      },
-    });
-
-    expect(
-      object('custom type message')
-        .entries({
-          array: array(),
-          boolean: boolean(),
-          number: number(),
-          object: object(),
-          string: string(),
-        })
-        .end()
-    ).toEqual({
-      type: {
-        value: 'object',
-        strict: false,
-        message: 'custom type message',
-      },
-      entries: {
-        array: array(),
-        boolean: boolean(),
-        number: number(),
-        object: object(),
-        string: string(),
-      },
-    });
-  });
-});
-
 describe('Schema: ObjectSchema / method: validate()', () => {
   test('default messages: simple', () => {
     expect(object().validate({})).toEqual({
@@ -614,3 +494,123 @@ describe('Schema: ObjectSchema / method: cast()', () => {
     );
   });
 });
+
+// describe('Schema: ObjectSchema / method: end()', () => {
+//   test('default messages', () => {
+//     expect(object().end()).toEqual({
+//       type: {
+//         value: 'object',
+//         strict: false,
+//         message: messages.object,
+//       },
+//     });
+
+//     expect(object().required().end()).toEqual({
+//       type: {
+//         value: 'object',
+//         strict: false,
+//         message: messages.object,
+//       },
+//       required: {
+//         value: true,
+//         message: messages.required,
+//       },
+//     });
+
+//     expect(object().notRequired().end()).toEqual({
+//       type: {
+//         value: 'object',
+//         strict: false,
+//         message: messages.object,
+//       },
+//       required: {
+//         value: false,
+//         message: '',
+//       },
+//     });
+
+//     expect(
+//       object()
+//         .entries({
+//           array: array(),
+//           boolean: boolean(),
+//           number: number(),
+//           object: object(),
+//           string: string(),
+//         })
+//         .end()
+//     ).toEqual({
+//       type: {
+//         value: 'object',
+//         strict: false,
+//         message: messages.object,
+//       },
+//       entries: {
+//         array: array(),
+//         boolean: boolean(),
+//         number: number(),
+//         object: object(),
+//         string: string(),
+//       },
+//     });
+//   });
+
+//   test('custom messages', () => {
+//     expect(object('custom type message').end()).toEqual({
+//       type: {
+//         value: 'object',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//     });
+
+//     expect(object('custom type message').required('custom requred message').end()).toEqual({
+//       type: {
+//         value: 'object',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: true,
+//         message: 'custom requred message',
+//       },
+//     });
+
+//     expect(object('custom type message').notRequired('custom not requred message').end()).toEqual({
+//       type: {
+//         value: 'object',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       required: {
+//         value: false,
+//         message: 'custom not requred message',
+//       },
+//     });
+
+//     expect(
+//       object('custom type message')
+//         .entries({
+//           array: array(),
+//           boolean: boolean(),
+//           number: number(),
+//           object: object(),
+//           string: string(),
+//         })
+//         .end()
+//     ).toEqual({
+//       type: {
+//         value: 'object',
+//         strict: false,
+//         message: 'custom type message',
+//       },
+//       entries: {
+//         array: array(),
+//         boolean: boolean(),
+//         number: number(),
+//         object: object(),
+//         string: string(),
+//       },
+//     });
+//   });
+// });
