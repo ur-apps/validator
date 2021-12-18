@@ -2,7 +2,7 @@ import { messages } from '../constants';
 import type { TDataTypes } from 'types';
 
 export type TBaseOptions = {
-  type: { value: TDataTypes; message: string };
+  type: { value: TDataTypes; strict: boolean; message: string };
   required?: { value: boolean; message: string };
 };
 
@@ -14,6 +14,7 @@ export abstract class BaseSchema<T extends TBaseOptions> {
     this.schema = {
       type: {
         value: type,
+        strict: false,
         message: message ?? messages.type,
       },
     };
