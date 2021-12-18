@@ -1,3 +1,9 @@
+import { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions } from '../schemas';
+
+export { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions };
+
+export type TDataTypes = 'array' | 'boolean' | 'number' | 'object' | 'string';
+
 export type TValidationSchema<TValues extends Record<string, any> = Record<string, any>> = {
   [key in keyof TValues]?: TFieldOptions;
 };
@@ -5,7 +11,7 @@ export type TValidationSchema<TValues extends Record<string, any> = Record<strin
 export type TFieldOptions = {
   type: { value: 'string' | 'number' | 'boolean'; message?: string };
   required?: { value: boolean; message?: string };
-  legnth?: { value: number; message?: string };
+  length?: { value: number; message?: string };
   minLength?: { value: number; message?: string };
   maxLength?: { value: number; message?: string };
   min?: { value: number; message?: string };
@@ -24,6 +30,28 @@ export type TValidationMessages = {
   large: string | ((max: number) => string);
   format: string;
   unequal: string | ((relField: string) => string);
+};
+
+export type TDefaultMessages = {
+  type: string;
+  string: string;
+  number: string;
+  boolean: string;
+  object: string;
+  array: string;
+  required: string;
+  length: (length: number) => string;
+  short: (length: number) => string;
+  long: (length: number) => string;
+  arrayLength: (length: number) => string;
+  arrayShort: (length: number) => string;
+  arrayLong: (length: number) => string;
+  small: (min: number) => string;
+  large: (max: number) => string;
+  format: string;
+  unequal: (relField: string) => string;
+  true: string;
+  false: string;
 };
 
 export type TValidationResult<TValues> = {

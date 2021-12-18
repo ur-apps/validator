@@ -1,4 +1,4 @@
-import { messages as defaultMessages } from './messages';
+import { messages as defaultMessages } from './constants';
 import type { TValidationSchema, TFieldOptions, TValidationResult, TValidationMessages } from './types';
 
 export class Validator<TValues extends Record<string, any>> {
@@ -61,8 +61,8 @@ export class Validator<TValues extends Record<string, any>> {
             break;
 
           case 'length':
-            if (this.validateLength(value, fieldSchema.legnth!.value)) break;
-            result.error = fieldSchema.legnth?.message ?? this.getErrorMessage('legnth', fieldSchema.legnth?.value);
+            if (this.validateLength(value, fieldSchema.length!.value)) break;
+            result.error = fieldSchema.length?.message ?? this.getErrorMessage('length', fieldSchema.length?.value);
             result.valid = false;
             return result;
 
@@ -255,7 +255,7 @@ export class Validator<TValues extends Record<string, any>> {
       case 'required':
         return this.messages.required;
 
-      case 'legnth':
+      case 'length':
         return typeof this.messages.length === 'string' ? this.messages.length : this.messages.length(value as number);
 
       case 'minLength':
