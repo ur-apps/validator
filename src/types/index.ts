@@ -38,6 +38,7 @@ export type TDefaultMessages = {
   arrayLong: (length: number) => string;
   small: (min: number) => string;
   large: (max: number) => string;
+  oneOf: (values: string[]) => string;
   format: string;
   unequal: (relField: string) => string;
   true: string;

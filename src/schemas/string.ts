@@ -8,6 +8,7 @@ export type TStringOptions = TBaseOptions & {
   minLength?: { value: number; message: string };
   maxLength?: { value: number; message: string };
   match?: { value: RegExp; message: string };
+  oneOf?: { values: string[]; message: string };
 };
 
 export class StringSchema extends BaseSchema<TStringOptions> {
@@ -27,6 +28,7 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       value,
       message: message ?? messages.length(value),
     };
+    if (this.schema.oneOf) delete this.schema.oneOf;
     return this;
   }
 
@@ -35,6 +37,7 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       value,
       message: message ?? messages.short(value),
     };
+    if (this.schema.oneOf) delete this.schema.oneOf;
     return this;
   }
 
@@ -43,6 +46,7 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       value,
       message: message ?? messages.long(value),
     };
+    if (this.schema.oneOf) delete this.schema.oneOf;
     return this;
   }
 
@@ -51,6 +55,19 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       value: regexp,
       message: message ?? messages.format,
     };
+    if (this.schema.oneOf) delete this.schema.oneOf;
+    return this;
+  }
+
+  oneOf(values: string[], message?: string) {
+    this.schema.oneOf = {
+      values,
+      message: message ?? messages.oneOf(values),
+    };
+    if (this.schema.length) delete this.schema.length;
+    if (this.schema.minLength) delete this.schema.minLength;
+    if (this.schema.maxLength) delete this.schema.maxLength;
+    if (this.schema.match) delete this.schema.match;
     return this;
   }
 
@@ -115,6 +132,13 @@ export class StringSchema extends BaseSchema<TStringOptions> {
             result.error = this.schema.match!.message;
             return result;
 
+          case 'oneOf':
+            if (this.validateOneOf(result.value, this.schema.oneOf!.values)) break;
+            result.valid = false;
+            result.value = value;
+            result.error = this.schema.oneOf!.message;
+            return result;
+
           default:
             break;
         }
@@ -173,6 +197,10 @@ export class StringSchema extends BaseSchema<TStringOptions> {
 
   private validateMatch(value: string, regexp: RegExp): boolean {
     return regexp.test(value);
+  }
+
+  private validateOneOf(value: string, values: string[]): boolean {
+    return values.includes(value);
   }
 }
 
