@@ -394,6 +394,285 @@ describe('Schema: ObjectSchema / method: validate()', () => {
   });
 });
 
+describe('Schema: ObjectSchema / method: validate({clean: true)', () => {
+  test('data validation and cleaning', () => {
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean(),
+          number: number(),
+          object: object().entries({
+            a: number(),
+            b: string(),
+            d: object().entries({
+              e: string(),
+              h: number(),
+            }),
+          }),
+          string: string(),
+        })
+        .validate(
+          {
+            array: [1, '2', 3],
+            cleaned1: 'str',
+            boolean: 1,
+            number: '123',
+            object: {
+              a: '1',
+              b: 123,
+              c: 'cleaned',
+              d: {
+                e: 123,
+                r: 1233331122,
+                h: '3222',
+              },
+            },
+            string: 123,
+            cleaned2: 321,
+            cleaned3: [],
+          },
+          { clean: true }
+        )
+    ).toEqual({
+      valid: true,
+      value: {
+        array: [1, 2, 3],
+        boolean: true,
+        number: 123,
+        object: { a: 1, b: '123', d: { e: '123', h: 3222 } },
+        string: '123',
+      },
+      error: '',
+    });
+
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean(),
+          number: number(),
+          object: object().entries({
+            a: number(),
+            b: string(),
+            d: object().entries({
+              e: string(),
+              h: number(),
+            }),
+          }),
+          string: string(),
+        })
+        .validate(
+          {
+            array: [1, '2', 3],
+            cleaned1: 'str',
+            boolean: 1,
+            number: '123',
+            string: 123,
+            cleaned2: 321,
+            cleaned3: [],
+          },
+          { clean: true }
+        )
+    ).toEqual({
+      valid: true,
+      value: {
+        array: [1, 2, 3],
+        boolean: true,
+        number: 123,
+        string: '123',
+      },
+      error: '',
+    });
+
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean().required(),
+          number: number(),
+          object: object()
+            .required()
+            .entries({
+              a: number(),
+              b: string(),
+              d: object().entries({
+                e: string(),
+                h: number(),
+              }),
+            }),
+          string: string(),
+        })
+        .validate(
+          {
+            array: [1, '2', 3],
+            cleaned1: 'str',
+            number: '123',
+            string: 123,
+            cleaned2: 321,
+            cleaned3: [],
+          },
+          { clean: true }
+        )
+    ).toEqual({
+      valid: false,
+      value: {
+        array: [1, '2', 3],
+        cleaned1: 'str',
+        number: '123',
+        string: 123,
+        cleaned2: 321,
+        cleaned3: [],
+      },
+      error: {
+        boolean: messages.required,
+        object: messages.required,
+      },
+    });
+
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean().required(),
+          number: number(),
+          object: object()
+            .required()
+            .entries({
+              a: number(),
+              b: string(),
+              d: object().entries({
+                e: string(),
+                h: number(),
+              }),
+            }),
+          string: string(),
+        })
+        .validate(
+          {
+            array: [1, '2', 3],
+            cleaned1: 'str',
+            number: '123',
+            object: 'text',
+            string: 123,
+            cleaned2: 321,
+            cleaned3: [],
+          },
+          { clean: true }
+        )
+    ).toEqual({
+      valid: false,
+      value: {
+        array: [1, '2', 3],
+        cleaned1: 'str',
+        number: '123',
+        object: 'text',
+        string: 123,
+        cleaned2: 321,
+        cleaned3: [],
+      },
+      error: {
+        boolean: messages.required,
+        object: messages.object,
+      },
+    });
+
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean(),
+          number: number(),
+          object: object().entries({
+            a: number(),
+            b: string(),
+            d: object().entries({
+              e: string(),
+              h: number(),
+            }),
+          }),
+          string: string(),
+        })
+        .validate({}, { clean: true })
+    ).toEqual({
+      valid: true,
+      value: {},
+      error: '',
+    });
+
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean(),
+          number: number(),
+          object: object().entries({
+            a: number(),
+            b: string(),
+            d: object().entries({
+              e: string(),
+              h: number(),
+            }),
+          }),
+          string: string(),
+        })
+        .validate(undefined, { clean: true })
+    ).toEqual({
+      valid: true,
+      value: undefined,
+      error: '',
+    });
+
+    expect(
+      object().validate(
+        {
+          array: [1, '2', 3],
+          cleaned1: 'str',
+          boolean: 1,
+          number: '123',
+          string: 123,
+          cleaned2: 321,
+          cleaned3: [],
+        },
+        { clean: true }
+      )
+    ).toEqual({
+      valid: true,
+      value: {
+        array: [1, '2', 3],
+        cleaned1: 'str',
+        boolean: 1,
+        number: '123',
+        string: 123,
+        cleaned2: 321,
+        cleaned3: [],
+      },
+      error: '',
+    });
+
+    expect(
+      object()
+        .entries({})
+        .validate(
+          {
+            array: [1, '2', 3],
+            cleaned1: 'str',
+            boolean: 1,
+            number: '123',
+            string: 123,
+            cleaned2: 321,
+            cleaned3: [],
+          },
+          { clean: true }
+        )
+    ).toEqual({
+      valid: true,
+      value: {},
+      error: '',
+    });
+  });
+});
+
 describe('Schema: ObjectSchema / method: isValid()', () => {
   test('simple validation', () => {
     expect(object().isValid({})).toEqual(true);
@@ -492,6 +771,236 @@ describe('Schema: ObjectSchema / method: cast()', () => {
         )
       )
     );
+  });
+});
+
+describe('Schema: ObjectSchema / method: clean()', () => {
+  test('data cleaning', () => {
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean(),
+          number: number(),
+          object: object().entries({
+            a: number(),
+            b: string(),
+            d: object().entries({
+              e: string(),
+              h: number(),
+            }),
+          }),
+          string: string(),
+        })
+        .clean({
+          array: [1, '2', 3],
+          cleaned1: 'str',
+          boolean: 1,
+          number: '123',
+          object: {
+            a: '1',
+            b: 123,
+            c: 'cleaned',
+            d: {
+              e: 123,
+              r: 1233331122,
+              h: '3222',
+            },
+          },
+          string: 123,
+          cleaned2: 321,
+          cleaned3: [],
+        })
+    ).toEqual({
+      array: [1, 2, 3],
+      boolean: true,
+      number: 123,
+      object: { a: 1, b: '123', d: { e: '123', h: 3222 } },
+      string: '123',
+    });
+
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean(),
+          number: number(),
+          object: object().entries({
+            a: number(),
+            b: string(),
+            d: object().entries({
+              e: string(),
+              h: number(),
+            }),
+          }),
+          string: string(),
+        })
+        .clean({
+          array: [1, '2', 3],
+          cleaned1: 'str',
+          boolean: 1,
+          number: '123',
+          string: 123,
+          cleaned2: 321,
+          cleaned3: [],
+        })
+    ).toEqual({
+      array: [1, 2, 3],
+      boolean: true,
+      number: 123,
+      string: '123',
+    });
+
+    expect(() =>
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean().required(),
+          number: number(),
+          object: object()
+            .required()
+            .entries({
+              a: number(),
+              b: string(),
+              d: object().entries({
+                e: string(),
+                h: number(),
+              }),
+            }),
+          string: string(),
+        })
+        .clean({
+          array: [1, '2', 3],
+          cleaned1: 'str',
+          number: '123',
+          string: 123,
+          cleaned2: 321,
+          cleaned3: [],
+        })
+    ).toThrowError(
+      new TypeError(
+        JSON.stringify(
+          {
+            boolean: messages.required,
+            object: messages.required,
+          },
+          undefined,
+          2
+        )
+      )
+    );
+
+    expect(() =>
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean().required(),
+          number: number(),
+          object: object()
+            .required()
+            .entries({
+              a: number(),
+              b: string(),
+              d: object().entries({
+                e: string(),
+                h: number(),
+              }),
+            }),
+          string: string(),
+        })
+        .clean({
+          array: [1, '2', 3],
+          cleaned1: 'str',
+          number: '123',
+          object: 'text',
+          string: 123,
+          cleaned2: 321,
+          cleaned3: [],
+        })
+    ).toThrowError(
+      new TypeError(
+        JSON.stringify(
+          {
+            boolean: messages.required,
+            object: messages.object,
+          },
+          undefined,
+          2
+        )
+      )
+    );
+
+    expect(
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean(),
+          number: number(),
+          object: object().entries({
+            a: number(),
+            b: string(),
+            d: object().entries({
+              e: string(),
+              h: number(),
+            }),
+          }),
+          string: string(),
+        })
+        .clean({})
+    ).toEqual({});
+
+    expect(() =>
+      object()
+        .entries({
+          array: array().of(number()),
+          boolean: boolean(),
+          number: number(),
+          object: object().entries({
+            a: number(),
+            b: string(),
+            d: object().entries({
+              e: string(),
+              h: number(),
+            }),
+          }),
+          string: string(),
+        })
+        .clean(undefined)
+    ).toThrowError(new TypeError(messages.object));
+
+    expect(
+      object().clean({
+        array: [1, '2', 3],
+        cleaned1: 'str',
+        boolean: 1,
+        number: '123',
+        string: 123,
+        cleaned2: 321,
+        cleaned3: [],
+      })
+    ).toEqual({
+      array: [1, '2', 3],
+      cleaned1: 'str',
+      boolean: 1,
+      number: '123',
+      string: 123,
+      cleaned2: 321,
+      cleaned3: [],
+    });
+
+    expect(
+      object()
+        .entries({})
+        .clean({
+          array: [1, '2', 3],
+          cleaned1: 'str',
+          boolean: 1,
+          number: '123',
+          string: 123,
+          cleaned2: 321,
+          cleaned3: [],
+        })
+    ).toEqual({});
   });
 });
 

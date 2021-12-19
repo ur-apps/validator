@@ -10,6 +10,14 @@ export type TObjectOptions = TBaseOptions & {
 
 type TObjectEntries = Record<string, ArraySchema | BooleanSchema | NumberSchema | StringSchema | ObjectSchema>;
 
+type TValidateOptions = {
+  /**
+   * Cleans properties that are not in the schema
+   * @default false
+   */
+  clean?: boolean;
+};
+
 export class ObjectSchema extends BaseSchema<TObjectOptions> {
   constructor(message?: string) {
     super('object', message ?? messages.object);
@@ -25,7 +33,8 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
    * @param value any
    * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message or object with property errors (if invalid) }
    */
-  validate(value: any): TValidationResult {
+  validate(value: any, options?: TValidateOptions): TValidationResult {
+    const withClean = options?.clean ?? false;
     const result: TValidationResult = {
       valid: true,
       value: value,
@@ -49,7 +58,7 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
         result.value = clone(value);
 
         for (const key in this.schema.entries) {
-          const entryResult = this.schema.entries[key].validate(result.value[key]);
+          const entryResult = this.schema.entries[key].validate(result.value[key], options);
 
           if (entryResult.valid) {
             result.value[key] = entryResult.value;
@@ -62,7 +71,12 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
       }
     }
 
-    if (!result.valid) result.value = value;
+    if (result.valid) {
+      if (withClean) result.value = this._clean(result.value);
+    } else {
+      result.value = value;
+    }
+
     return result;
   }
 
@@ -77,7 +91,7 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
 
   /**
    * Casts the object and its values to the format specified in the schema (if strict mode is not enabled)
-   * @param value an object with data that can be cast to the type specified in the schema
+   * @param value an object with data that can be cast to the format specified in the schema
    * @returns object with cast data or an error if the data is not valid
    */
   cast(value: any) {
@@ -94,6 +108,45 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     }
 
     throw TypeError(messages.object);
+  }
+
+  /**
+   * Validates, cleans and casts the object and its values to the format specified in the schema
+   * @param value an object with data that can be cleaned and cast to the format specified in the schema
+   * @returns object with cleaned and cast data or an error if the data is not valid
+   */
+  clean(value: any) {
+    if (isObject(value)) {
+      const validation = this.validate(value, { clean: true });
+
+      if (validation.valid) {
+        return validation.value;
+      }
+
+      throw TypeError(
+        typeof validation.error === 'string' ? validation.error : JSON.stringify(validation.error, undefined, 2)
+      );
+    }
+
+    throw TypeError(messages.object);
+  }
+
+  private _clean(value: any) {
+    let result: undefined | Record<string, any> = isObject(value) ? {} : undefined;
+
+    if (this.schema.entries && isObject(value)) {
+      if (typeof result === 'undefined') result = {};
+
+      for (const key in this.schema.entries) {
+        if (value[key] !== undefined && value[key] !== null) {
+          result[key] = value[key];
+        }
+      }
+    } else {
+      result = value;
+    }
+
+    return result;
   }
 
   private validateType(value: any): boolean {
