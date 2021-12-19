@@ -16,6 +16,7 @@ export const messages: TDefaultMessages = {
   arrayLong: (length: number) => `maximum field length ${length} characters`,
   small: (min: number) => `minimum value is greater than or equal to ${min}`,
   large: (max: number) => `the maximum value is less than or equal to ${max}`,
+  oneOf: (values: string[]) => `value must be equal to one of the following values: ${values.join(', ')}`,
   format: 'invalid data format',
   unequal: (relField: string) => `field must match ${relField} field`,
   true: 'value must be "true"',

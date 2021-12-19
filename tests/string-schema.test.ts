@@ -1,5 +1,7 @@
 import { string, messages } from '../lib';
 
+const oneOfList = ['test1', 'test2', 'test3', '123'];
+
 describe('Schema: StringSchema / method: validate()', () => {
   test('default messages: not strict', () => {
     expect(string().validate('text')).toEqual({
@@ -456,6 +458,32 @@ describe('Schema: StringSchema / method: validate()', () => {
     });
   });
 
+  test('default messages: oneOf', () => {
+    expect(string().oneOf(oneOfList).validate('test1')).toEqual({
+      valid: true,
+      value: 'test1',
+      error: '',
+    });
+
+    expect(string().oneOf(oneOfList).validate(123)).toEqual({
+      valid: true,
+      value: '123',
+      error: '',
+    });
+
+    expect(string().minLength(10).oneOf(oneOfList).validate('test1')).toEqual({
+      valid: true,
+      value: 'test1',
+      error: '',
+    });
+
+    expect(string().oneOf(oneOfList).validate('test4')).toEqual({
+      valid: false,
+      value: 'test4',
+      error: messages.oneOf(oneOfList),
+    });
+  });
+
   test('custom messages: not strict', () => {
     expect(string('custom type message').validate('text')).toEqual({
       valid: true,
@@ -908,6 +936,34 @@ describe('Schema: StringSchema / method: validate()', () => {
       valid: false,
       value: 4321,
       error: 'custom match message',
+    });
+  });
+
+  test('custom messages: oneOf', () => {
+    expect(string('custom type message').oneOf(oneOfList, 'custom oneOf message').validate('test1')).toEqual({
+      valid: true,
+      value: 'test1',
+      error: '',
+    });
+
+    expect(string('custom type message').oneOf(oneOfList, 'custom oneOf message').validate(123)).toEqual({
+      valid: true,
+      value: '123',
+      error: '',
+    });
+
+    expect(
+      string('custom type message').minLength(10).oneOf(oneOfList, 'custom oneOf message').validate('test1')
+    ).toEqual({
+      valid: true,
+      value: 'test1',
+      error: '',
+    });
+
+    expect(string('custom type message').oneOf(oneOfList, 'custom oneOf message').validate('test4')).toEqual({
+      valid: false,
+      value: 'test4',
+      error: 'custom oneOf message',
     });
   });
 });
