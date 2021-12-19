@@ -13,7 +13,8 @@
     "lint:fix": "eslint ./src ./tests --fix",
     "release:patch": "npm version patch && git push --follow-tags",
     "release:minor": "npm version minor && git push --follow-tags",
-    "release:major": "npm version major && git push --follow-tags"
+    "release:major": "npm version major && git push --follow-tags",
+    "prerelease": "npm version prerelease && git push --follow-tags"
   },
   "pre-commit": [
     "lint:fix"
