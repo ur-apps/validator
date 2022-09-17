@@ -9,6 +9,7 @@
     "dev": "tsc -p . -w",
     "build": "tsc -p .",
     "test": "jest ./tests",
+    "test:coverage": "jest --coverage",
     "lint": "eslint ./src ./tests",
     "lint:fix": "eslint ./src ./tests --fix",
     "release:patch": "npm version patch && git push --follow-tags",
