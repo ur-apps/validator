@@ -361,6 +361,12 @@ describe('Schema: StringSchema / method: validate()', () => {
       error: '',
     });
 
+    expect(string().length(4).validate('')).toEqual({
+      valid: true,
+      value: '',
+      error: '',
+    });
+
     expect(string().length(5).validate(10000)).toEqual({
       valid: true,
       value: '10000',
