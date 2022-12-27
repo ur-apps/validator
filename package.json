@@ -1,6 +1,6 @@
 {
   "name": "ur-validator",
-  "version": "0.0.1-0",
+  "version": "0.0.1-1",
   "description": "JavaScript and TypeScript validation library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
