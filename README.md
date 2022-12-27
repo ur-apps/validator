@@ -1,6 +1,6 @@
-# gvalid
+# @ur/validator
 
-**gvalid** is a lightweight JavaScript / TypeScript library for data validation.
+**@ur/validator** is a lightweight JavaScript / TypeScript library for data validation.
 The library is based on popular JavaScript libraries, from which the best solutions are taken and to which their own improvements have been added. The library can validate, cast data to the specified type, and also clean objects from unnecessary data.
 
 ## Сontents
@@ -22,17 +22,17 @@ The library is based on popular JavaScript libraries, from which the best soluti
 ## Installation
 
 ```sh
-npm install gvalid
+npm install @ur/validator
 ```
 
 ## Connection
 
 ```js
-import g from 'gvalid'; // g includes object, array, string, number, boolean schemas
+import g from '@ur/validator'; // g includes object, array, string, number, boolean schemas
 // or
-import { g } from 'gvalid';
+import { g } from '@ur/validator';
 // or
-import { object, array, string, number, boolean } from 'gvalid';
+import { object, array, string, number, boolean } from '@ur/validator';
 ```
 
 ## Usage examples
@@ -40,7 +40,7 @@ import { object, array, string, number, boolean } from 'gvalid';
 First, we need to generate a schema, then we can validate the data.
 
 ```js
-import { object, array, string, number, boolean } from 'gvalid';
+import { object, array, string, number, boolean } from '@ur/validator';
 
 string().minLength(4).validate('example text'); // { valid: true, value: 'example text', error: ''}
 nubmer().min(5).max(100).isValid(22); // true
@@ -74,9 +74,9 @@ arrayData.validate([123, '124', 125]); // { valid: true, value: [123, 124, 125],
 ### g
 
 ```js
-import g from 'gvalid';
+import g from '@ur/validator';
 // or
-import { g } from 'gvalid';
+import { g } from '@ur/validator';
 
 g.array();
 g.boolean();
@@ -90,7 +90,7 @@ g.string();
 #### `validate()`
 
 ```js
-import { string } from 'gvalid';
+import { string } from '@ur/validator';
 
 string().validate('valid text'); // { valid: true, value: 'valid text', error: '' }
 string().validate(''); // { valid: true, value: '', error: '' }
@@ -101,7 +101,7 @@ string().validate(true); // { valid: false, value: true, error: 'expected string
 #### `isValid()`
 
 ```js
-import { string } from 'gvalid';
+import { string } from '@ur/validator';
 
 string().isValid('valid text'); // true
 string().isValid(12345); // true
@@ -111,7 +111,7 @@ string().isValid(true); // false
 #### `cast()`
 
 ```js
-import { string } from 'gvalid';
+import { string } from '@ur/validator';
 
 string().cast('valid text'); // 'valid text'
 string().cast(12345); // '12345'
@@ -121,7 +121,7 @@ string().cast(true); // TypeError: expected string value
 #### `strict()`
 
 ```js
-import { string } from 'gvalid';
+import { string } from '@ur/validator';
 
 string().strict().validate('valid text'); // { valid: true, value: 'valid text', error: '' }
 string().strict().validate(12345); // { valid: true, value: '12345', error: '' }
@@ -131,7 +131,7 @@ string().strict().validate(12345); // { valid: false, value: 12345, error: 'expe
 #### `required()`
 
 ```js
-import { string } from 'gvalid';
+import { string } from '@ur/validator';
 
 string().required().validate('valid text'); // { valid: true, value: 'valid text', error: '' }
 string().required().validate(''); // { valid: false, value: '', error: 'required field' }
@@ -144,7 +144,7 @@ string().required().required().validate(null); // { valid: false, value: null, e
 #### `length()`
 
 ```js
-import { string } from 'gvalid';
+import { string } from '@ur/validator';
 
 string().length(4).validate('text'); // { valid: true, value: 'text', error: '' }
 string().length(4).validate(''); // { valid: true, value: '', error: '' }

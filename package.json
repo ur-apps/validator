@@ -1,6 +1,6 @@
 {
-  "name": "gvalid",
-  "version": "2.0.0-beta.2",
+  "name": "ur-validator",
+  "version": "0.0.1-0",
   "description": "JavaScript and TypeScript validation library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -33,11 +33,11 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/garikfreedomyan/gvalid.git"
+    "url": "git+https://github.com/ur-apps/validator.git"
   },
-  "homepage": "https://github.com/garikfreedomyan/gvalid#readme",
+  "homepage": "https://github.com/ur-apps/validator#readme",
   "bugs": {
-    "url": "https://github.com/garikfreedomyan/gvalid/issues"
+    "url": "https://github.com/ur-apps/validator/issues"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
