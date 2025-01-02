@@ -1,7 +1,14 @@
 # ur-validator
 
-**ur-validator** is a lightweight JavaScript / TypeScript library for data validation.
-The library is based on popular JavaScript libraries, from which the best solutions are taken and to which their own improvements have been added. The library can validate, cast data to the specified type, and also clean objects from unnecessary data.
+**ur-validator** is a lightweight and flexible JavaScript/TypeScript library designed for data validation. It draws inspiration from popular JavaScript libraries, incorporating their best practices while adding unique enhancements. The library provides robust functionality to validate, cast, and clean data, ensuring it meets specified criteria.
+
+Key Features
+
+- **Validation**: Validate data against predefined schemas to ensure it meets the required format and constraints.
+- **Casting**: Automatically cast data to the specified type, making it easier to work with different data formats.
+- **Cleaning**: Remove unnecessary data from objects, keeping only the relevant fields as defined by the schema.
+- **Schema-based**: Define schemas for various data types including strings, numbers, booleans, arrays, and objects.
+- **Customizable**: Easily extend and customize validation rules to fit specific use cases.
 
 ## Сontents
 
@@ -9,15 +16,17 @@ The library is based on popular JavaScript libraries, from which the best soluti
 - [Connection](#connection)
 - [Usage examples](#usage-examples)
 - [Schemas](#schemas)
-  - [g](#g)
+  - [uv](#uv)
   - [string](#string)
   - [number](#number)
   - [boolean](#boolean)
   - [array](#array)
   - [object](#object)
-- [Utils](#Schemas)
+- [Utils](#utils)
   - [clone](#clone)
   - [type checkers](#type-checkers)
+- [Documentation](#documentation)
+- [License](#license)
 
 ## Installation
 
@@ -28,9 +37,9 @@ npm install ur-validator
 ## Connection
 
 ```js
-import g from 'ur-validator'; // g includes object, array, string, number, boolean schemas
+import uv from 'ur-validator'; // uv includes object, array, string, number, boolean schemas
 // or
-import { g } from 'ur-validator';
+import { uv } from 'ur-validator';
 // or
 import { object, array, string, number, boolean } from 'ur-validator';
 ```
@@ -71,18 +80,18 @@ arrayData.validate([123, '124', 125]); // { valid: true, value: [123, 124, 125],
 
 ## Schemas
 
-### g
+### uv
 
 ```js
-import g from 'ur-validator';
+import uv from 'ur-validator';
 // or
-import { g } from 'ur-validator';
+import { uv } from 'ur-validator';
 
-g.array();
-g.boolean();
-g.number();
-g.object();
-g.string();
+uv.array();
+uv.boolean();
+uv.number();
+uv.object();
+uv.string();
 ```
 
 ### string
@@ -124,7 +133,6 @@ string().cast(true); // TypeError: expected string value
 import { string } from 'ur-validator';
 
 string().strict().validate('valid text'); // { valid: true, value: 'valid text', error: '' }
-string().strict().validate(12345); // { valid: true, value: '12345', error: '' }
 string().strict().validate(12345); // { valid: false, value: 12345, error: 'expected string value' }
 ```
 
@@ -141,6 +149,13 @@ string().required().required().validate(null); // { valid: false, value: null, e
 
 #### `notRequired()`
 
+```js
+import { string } from 'ur-validator';
+
+string().notRequired().validate(undefined); // { valid: true, value: undefined, error: '' }
+string().required().notRequired().validate(undefined); // { valid: true, value: undefined, error: '' }
+```
+
 #### `length()`
 
 ```js
@@ -151,3 +166,11 @@ string().length(4).validate(''); // { valid: true, value: '', error: '' }
 string().length(4).validate('long text'); // { valid: true, value: 'long text', error: 'field length must be 4 characters' }
 string().length(40).validate('short text'); // { valid: false, value: 'short text', error: 'field length must be 40 characters' }
 ```
+
+## Documentation
+
+For detailed documentation and more examples, visit the [GitHub](https://github.com/ur-apps/validator#readme) repository.
+
+## License
+
+This project is licensed under the ISC License. See the LICENSE file for more details.

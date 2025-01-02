@@ -4,7 +4,7 @@ export { array, boolean, number, object, string };
 export * from './utils';
 export * from './constants';
 export * from './types';
-export const g = {
+export const uv = {
   array,
   boolean,
   number,
@@ -12,4 +12,4 @@ export const g = {
   string,
 };
 
-export default g;
+export default uv;
