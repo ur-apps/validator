@@ -1,6 +1,6 @@
 import { isObject, isArray } from './type-checkers';
 
-export function clone(value: any): any {
+export function clone<V>(value: V): V {
   if (isObject(value)) {
     return cloneObject(value);
   } else if (isArray(value)) {
@@ -10,19 +10,20 @@ export function clone(value: any): any {
   }
 }
 
-function cloneObject(obj: Record<string, any>): Record<string, any> {
-  const result: Record<string, any> = {};
+function cloneObject<V extends Record<string, unknown>>(obj: V): V {
+  const result: V = {} as V;
 
   for (const item of Object.entries(obj)) {
     const [key, value] = item;
-    result[key] = clone(value);
+
+    (result as Record<string, unknown>)[key] = clone(value);
   }
 
   return result;
 }
 
-function cloneArray(arr: Array<any>): Array<any> {
-  const result: Array<any> = [];
+function cloneArray<V extends Array<unknown>>(arr: V): V {
+  const result: V = [] as unknown as V;
 
   for (const item of arr) {
     result.push(clone(item));
