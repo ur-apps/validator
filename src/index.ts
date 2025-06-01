@@ -1,6 +1,17 @@
-import { array, boolean, number, object, string } from './schemas';
+import {
+  array,
+  boolean,
+  number,
+  object,
+  string,
+  ArraySchema,
+  BooleanSchema,
+  NumberSchema,
+  ObjectSchema,
+  StringSchema,
+} from './schemas';
 
-export { array, boolean, number, object, string };
+export { array, boolean, number, object, string, ArraySchema, BooleanSchema, NumberSchema, ObjectSchema, StringSchema };
 export * from './utils';
 export * from './constants';
 export * from './types';
