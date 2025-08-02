@@ -1,4 +1,4 @@
-import { isNumber, isString } from '@ur-apps/common';
+import { isNullish, isNumber, isString } from '@ur-apps/common';
 
 import { messages } from '../constants';
 import type { TPrimitiveValidationResult as TValidationResult } from '../types';
@@ -27,6 +27,7 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
       value,
       message: message ?? messages.small(value),
     };
+
     return this;
   }
 
@@ -35,6 +36,7 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
       value,
       message: message ?? messages.large(value),
     };
+
     return this;
   }
 
@@ -53,23 +55,27 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
     if (this.schema.required?.value && !this.validateRequired(value)) {
       result.valid = false;
       result.error = this.schema.required.message;
+
       return result;
     }
 
-    if (value !== undefined && value !== null && value !== '') {
-      if (this.validateType(value)) {
-        result.value = Number(value);
-      } else {
-        result.valid = false;
-        result.error = this.schema.type.message;
-        return result;
-      }
+    if (isNullish(value) || value === '') {
+      return result;
+    }
+
+    if (this.validateType(value)) {
+      result.value = Number(value);
+    } else {
+      result.valid = false;
+      result.error = this.schema.type.message;
+
+      return result;
     }
 
     for (const option in this.schema) {
       switch (option) {
         case 'type':
-        case 'requred':
+        case 'required':
           break;
 
         case 'min':
@@ -127,7 +133,7 @@ export class NumberSchema extends BaseSchema<TNumberOptions> {
   }
 
   private validateRequired(value: any): boolean {
-    return value !== undefined && value !== null && value !== '';
+    return !isNullish(value) && value !== '';
   }
 
   private validateMin(value: number, min: number): boolean {

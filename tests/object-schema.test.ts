@@ -1052,7 +1052,7 @@ describe('Schema: ObjectSchema / method: clean()', () => {
 //       },
 //     });
 
-//     expect(object('custom type message').required('custom requred message').end()).toEqual({
+//     expect(object('custom type message').required('custom required message').end()).toEqual({
 //       type: {
 //         value: 'object',
 //         strict: false,
@@ -1060,11 +1060,11 @@ describe('Schema: ObjectSchema / method: clean()', () => {
 //       },
 //       required: {
 //         value: true,
-//         message: 'custom requred message',
+//         message: 'custom required message',
 //       },
 //     });
 
-//     expect(object('custom type message').notRequired('custom not requred message').end()).toEqual({
+//     expect(object('custom type message').notRequired('custom not required message').end()).toEqual({
 //       type: {
 //         value: 'object',
 //         strict: false,
@@ -1072,7 +1072,7 @@ describe('Schema: ObjectSchema / method: clean()', () => {
 //       },
 //       required: {
 //         value: false,
-//         message: 'custom not requred message',
+//         message: 'custom not required message',
 //       },
 //     });
 

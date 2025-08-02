@@ -1,4 +1,4 @@
-import { isNumber, isString } from '@ur-apps/common';
+import { isNullish, isNumber, isString } from '@ur-apps/common';
 
 import { messages } from '../constants';
 import type { TPrimitiveValidationResult as TValidationResult } from '../types';
@@ -30,7 +30,11 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       value,
       message: message ?? messages.length(value),
     };
-    if (this.schema.oneOf) delete this.schema.oneOf;
+
+    if (this.schema.oneOf) {
+      delete this.schema.oneOf;
+    }
+
     return this;
   }
 
@@ -39,7 +43,11 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       value,
       message: message ?? messages.short(value),
     };
-    if (this.schema.oneOf) delete this.schema.oneOf;
+
+    if (this.schema.oneOf) {
+      delete this.schema.oneOf;
+    }
+
     return this;
   }
 
@@ -48,7 +56,11 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       value,
       message: message ?? messages.long(value),
     };
-    if (this.schema.oneOf) delete this.schema.oneOf;
+
+    if (this.schema.oneOf) {
+      delete this.schema.oneOf;
+    }
+
     return this;
   }
 
@@ -57,7 +69,11 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       value: regexp,
       message: message ?? messages.format,
     };
-    if (this.schema.oneOf) delete this.schema.oneOf;
+
+    if (this.schema.oneOf) {
+      delete this.schema.oneOf;
+    }
+
     return this;
   }
 
@@ -66,10 +82,12 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       values,
       message: message ?? messages.oneOf(values),
     };
+
     if (this.schema.length) delete this.schema.length;
     if (this.schema.minLength) delete this.schema.minLength;
     if (this.schema.maxLength) delete this.schema.maxLength;
     if (this.schema.match) delete this.schema.match;
+
     return this;
   }
 
@@ -88,64 +106,75 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     if (this.schema.required?.value && !this.validateRequired(value)) {
       result.valid = false;
       result.error = this.schema.required.message;
+
       return result;
     }
 
-    if (value !== undefined && value !== null && value !== '') {
-      if (this.validateType(value)) {
-        result.value = String(value);
-      } else {
-        result.valid = false;
-        result.error = this.schema.type.message;
-        return result;
-      }
+    if (isNullish(value) || value === '') {
+      return result;
+    }
 
-      for (const option in this.schema) {
-        switch (option) {
-          case 'type':
-          case 'requred':
-            break;
+    if (this.validateType(value)) {
+      result.value = String(value);
+    } else {
+      result.valid = false;
+      result.error = this.schema.type.message;
 
-          case 'length':
-            if (this.validateLength(result.value, this.schema.length!.value)) break;
-            result.valid = false;
-            result.value = value;
-            result.error = this.schema.length!.message;
-            return result;
+      return result;
+    }
 
-          case 'minLength':
-            if (this.validateMinLength(result.value, this.schema.minLength!.value)) break;
-            result.valid = false;
-            result.value = value;
-            result.error = this.schema.minLength!.message;
-            return result;
+    for (const option in this.schema) {
+      switch (option) {
+        case 'length':
+          if (this.validateLength(result.value, this.schema.length!.value)) break;
 
-          case 'maxLength':
-            if (this.validateMaxLength(result.value, this.schema.maxLength!.value)) break;
-            result.valid = false;
-            result.value = value;
-            result.error = this.schema.maxLength!.message;
-            return result;
+          result.valid = false;
+          result.value = value;
+          result.error = this.schema.length!.message;
 
-          case 'match':
-            if (this.validateMatch(result.value, this.schema.match!.value)) break;
-            result.valid = false;
-            result.value = value;
-            result.error = this.schema.match!.message;
-            return result;
+          return result;
 
-          case 'oneOf':
-            if (this.validateOneOf(result.value, this.schema.oneOf!.values)) break;
-            result.valid = false;
-            result.value = value;
-            result.error = this.schema.oneOf!.message;
-            return result;
+        case 'minLength':
+          if (this.validateMinLength(result.value, this.schema.minLength!.value)) break;
 
-          default:
-            break;
-        }
+          result.valid = false;
+          result.value = value;
+          result.error = this.schema.minLength!.message;
+
+          return result;
+
+        case 'maxLength':
+          if (this.validateMaxLength(result.value, this.schema.maxLength!.value)) break;
+
+          result.valid = false;
+          result.value = value;
+          result.error = this.schema.maxLength!.message;
+
+          return result;
+
+        case 'match':
+          if (this.validateMatch(result.value, this.schema.match!.value)) break;
+
+          result.valid = false;
+          result.value = value;
+          result.error = this.schema.match!.message;
+
+          return result;
+
+        case 'oneOf':
+          if (this.validateOneOf(result.value, this.schema.oneOf!.values)) break;
+
+          result.valid = false;
+          result.value = value;
+          result.error = this.schema.oneOf!.message;
+
+          return result;
+
+        default:
+          break;
       }
     }
+
     return result;
   }
 
@@ -182,7 +211,7 @@ export class StringSchema extends BaseSchema<TStringOptions> {
   }
 
   private validateRequired(value: any): boolean {
-    return value !== undefined && value !== null && value !== '';
+    return !isNullish(value) && value !== '';
   }
 
   private validateLength(value: string, length: number): boolean {

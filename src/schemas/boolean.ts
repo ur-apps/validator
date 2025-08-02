@@ -1,4 +1,4 @@
-import { isBoolean, isNumber } from '@ur-apps/common';
+import { isBoolean, isNullish, isNumber } from '@ur-apps/common';
 
 import { messages } from '../constants';
 import type { TPrimitiveValidationResult as TValidationResult } from '../types';
@@ -27,6 +27,7 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
       value: true,
       message: message ?? messages.true,
     };
+
     if (this.schema.isFalse) {
       this.schema.isFalse.value = false;
     }
@@ -39,6 +40,7 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
       value: true,
       message: message ?? messages.false,
     };
+
     if (this.schema.isTrue) {
       this.schema.isTrue.value = false;
     }
@@ -58,46 +60,54 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
       error: '',
     };
 
-    if (this.schema.required?.value && !this.validateRequired(value)) {
+    if (this.schema.required?.value && isNullish(value)) {
       result.valid = false;
       result.error = this.schema.required.message;
+
       return result;
     }
 
-    if (value !== undefined && value !== null) {
-      if (this.validateType(value)) {
-        result.value = Boolean(value);
-      } else {
-        result.valid = false;
-        result.error = this.schema.type.message;
-        return result;
-      }
+    if (isNullish(value)) {
+      return result;
+    }
 
-      for (const option in this.schema) {
-        switch (option) {
-          case 'type':
-          case 'requred':
-            break;
+    if (this.validateType(value)) {
+      result.value = Boolean(value);
+    } else {
+      result.valid = false;
+      result.error = this.schema.type.message;
 
-          case 'isTrue':
-            if (!this.schema.isTrue?.value) break;
-            if (this.validateIsTrue(result.value)) break;
-            result.valid = false;
-            result.value = value;
-            result.error = this.schema.isTrue!.message;
-            return result;
+      return result;
+    }
 
-          case 'isFalse':
-            if (!this.schema.isFalse?.value) break;
-            if (this.validateIsFalse(result.value)) break;
-            result.valid = false;
-            result.value = value;
-            result.error = this.schema.isFalse!.message;
-            return result;
+    for (const option in this.schema) {
+      switch (option) {
+        case 'type':
+        case 'required':
+          break;
 
-          default:
-            break;
-        }
+        case 'isTrue':
+          if (!this.schema.isTrue?.value) break;
+          if (this.validateIsTrue(result.value)) break;
+
+          result.valid = false;
+          result.value = value;
+          result.error = this.schema.isTrue.message;
+
+          return result;
+
+        case 'isFalse':
+          if (!this.schema.isFalse?.value) break;
+          if (this.validateIsFalse(result.value)) break;
+
+          result.valid = false;
+          result.value = value;
+          result.error = this.schema.isFalse!.message;
+
+          return result;
+
+        default:
+          break;
       }
     }
 
@@ -131,13 +141,10 @@ export class BooleanSchema extends BaseSchema<TBooleanOptions> {
 
   private validateType(value: any): boolean {
     if (isBoolean(value)) return true;
+
     if (!this.schema.type.strict && isNumber(value) && (+value === 0 || +value === 1)) return true;
 
     return false;
-  }
-
-  private validateRequired(value: any): boolean {
-    return value !== undefined && value !== null;
   }
 
   private validateIsTrue(value: boolean) {

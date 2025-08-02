@@ -1,4 +1,4 @@
-import { clone, isArray } from '@ur-apps/common';
+import { clone, isArray, isNullish } from '@ur-apps/common';
 
 import { messages } from '../constants';
 import type { BooleanSchema, NumberSchema, ObjectSchema, StringSchema } from '../schemas';
@@ -14,6 +14,14 @@ export type TArrayOptions = TBaseOptions & {
 };
 
 type TArrayEntry = ArraySchema | BooleanSchema | NumberSchema | ObjectSchema | StringSchema;
+
+type TValidateOptions = {
+  /**
+   * Cleans properties that are not in the schema
+   * @default false
+   */
+  clean?: boolean;
+};
 
 export class ArraySchema extends BaseSchema<TArrayOptions> {
   constructor(message?: string) {
@@ -46,6 +54,7 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
 
   of(entry: TArrayEntry) {
     this.schema.entry = entry;
+
     return this;
   }
 
@@ -54,74 +63,84 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
    * @param value any
    * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message or object with items errors (if invalid) }
    */
-  validate(value: any): TValidationResult {
+  validate(value: any, options?: TValidateOptions): TValidationResult {
     const result: TValidationResult = {
       valid: true,
-      value: value,
+      value,
       error: '',
     };
 
-    if (this.schema.required?.value && !this.validateRequired(value)) {
+    if (this.schema.required?.value && isNullish(value)) {
       result.valid = false;
       result.error = this.schema.required.message;
+
       return result;
     }
 
-    if (value !== undefined && value !== null) {
-      if (!this.validateType(value)) {
-        result.valid = false;
-        result.error = this.schema.type.message;
-        return result;
+    if (isNullish(value)) {
+      return result;
+    }
+
+    if (!this.validateType(value)) {
+      result.valid = false;
+      result.error = this.schema.type.message;
+
+      return result;
+    }
+
+    for (const option in this.schema) {
+      switch (option) {
+        case 'length':
+          if (this.validateLength(result.value, this.schema.length!.value)) break;
+
+          result.valid = false;
+          result.error = this.schema.length!.message;
+
+          return result;
+
+        case 'minLength':
+          if (this.validateMinLength(result.value, this.schema.minLength!.value)) break;
+
+          result.valid = false;
+          result.error = this.schema.minLength!.message;
+
+          return result;
+
+        case 'maxLength':
+          if (this.validateMaxLength(result.value, this.schema.maxLength!.value)) break;
+
+          result.valid = false;
+          result.error = this.schema.maxLength!.message;
+
+          return result;
+
+        default:
+          break;
       }
+    }
 
-      for (const option in this.schema) {
-        switch (option) {
-          case 'type':
-          case 'requred':
-          case 'entry':
-            break;
+    if (this.schema.entry) {
+      result.value = clone(value);
 
-          case 'length':
-            if (this.validateLength(result.value, this.schema.length!.value)) break;
-            result.valid = false;
-            result.error = this.schema.length!.message;
-            return result;
+      for (let i = 0; i < value.length; i++) {
+        const entryResult = this.schema.entry.validate(result.value[i], options);
 
-          case 'minLength':
-            if (this.validateMinLength(result.value, this.schema.minLength!.value)) break;
-            result.valid = false;
-            result.error = this.schema.minLength!.message;
-            return result;
-
-          case 'maxLength':
-            if (this.validateMaxLength(result.value, this.schema.maxLength!.value)) break;
-            result.valid = false;
-            result.error = this.schema.maxLength!.message;
-            return result;
-
-          default:
-            break;
-        }
-      }
-
-      if (this.schema.entry) {
-        result.value = clone(value);
-
-        for (let i = 0; i < value.length; i++) {
-          const entryResult = this.schema.entry.validate(result.value[i]);
-
-          if (entryResult.valid) {
-            result.value[i] = entryResult.value;
-          } else {
-            if (typeof result.error === 'string') result.error = {};
-            result.valid = false;
-            result.error[i] = entryResult.error;
+        if (entryResult.valid) {
+          result.value[i] = entryResult.value;
+        } else {
+          if (typeof result.error === 'string') {
+            result.error = {};
           }
+
+          result.valid = false;
+          result.error[i] = entryResult.error;
         }
       }
     }
 
-    if (!result.valid) result.value = value;
+    if (!result.valid) {
+      result.value = value;
+    }
 
     return result;
   }
@@ -158,10 +177,6 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
 
   private validateType(value: any): boolean {
     return isArray(value);
-  }
-
-  private validateRequired(value: any): boolean {
-    return value !== undefined && value !== null;
   }
 
   private validateLength(value: any[], length: number): boolean {

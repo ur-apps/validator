@@ -1,4 +1,4 @@
-import { clone, isObject } from '@ur-apps/common';
+import { clone, isNullish, isObject } from '@ur-apps/common';
 
 import { messages } from '../constants';
 import type { ArraySchema, BooleanSchema, NumberSchema, StringSchema } from '../schemas';
@@ -21,12 +21,21 @@ type TValidateOptions = {
 };
 
 export class ObjectSchema extends BaseSchema<TObjectOptions> {
-  constructor(message?: string) {
-    super('object', message ?? messages.object);
+  constructor(entries?: TObjectEntries);
+  constructor(message?: string);
+  constructor(entries?: TObjectEntries, message?: string);
+  constructor(entriesOrMessage?: TObjectEntries | string, message?: string) {
+    if (typeof entriesOrMessage === 'string' || entriesOrMessage === undefined) {
+      super('object', entriesOrMessage ?? messages.object);
+    } else {
+      super('object', message ?? messages.object);
+      this.schema.entries = entriesOrMessage;
+    }
   }
 
   entries(entries: TObjectEntries) {
     this.schema.entries = entries;
+
     return this;
   }
 
@@ -36,47 +45,43 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
    * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message or object with property errors (if invalid) }
    */
   validate(value: any, options?: TValidateOptions): TValidationResult {
-    const withClean = options?.clean ?? false;
     const result: TValidationResult = {
       valid: true,
-      value: value,
+      value,
       error: '',
     };
 
-    if (this.schema.required?.value && !this.validateRequired(value)) {
+    if (this.schema.required?.value && isNullish(value)) {
       result.valid = false;
       result.error = this.schema.required.message;
+
       return result;
     }
 
-    if (value !== undefined && value !== null) {
+    if (!isNullish(value)) {
       if (!this.validateType(value)) {
         result.valid = false;
         result.error = this.schema.type.message;
+
         return result;
       }
 
       if (this.schema.entries) {
         result.value = clone(value);
 
-        for (const key in this.schema.entries) {
-          const entryResult = this.schema.entries[key].validate(result.value[key], options);
+        const entriesResult = this.validateEntries(result.value, options);
 
-          if (entryResult.valid) {
-            result.value[key] = entryResult.value;
-          } else {
-            if (typeof result.error === 'string') result.error = {};
-
-            result.valid = false;
-            result.error[key] = entryResult.error;
-          }
-        }
+        result.valid = entriesResult.valid;
+        result.value = entriesResult.value;
+        result.error = entriesResult.error;
       }
     }
 
-    if (result.valid) {
-      if (withClean) result.value = this._clean(result.value);
-    } else {
+    if (result.valid && options?.clean) {
+      result.value = this._clean(result.value);
+    }
+
+    if (!result.valid) {
       result.value = value;
     }
 
@@ -134,21 +139,15 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     throw TypeError(messages.object);
   }
 
-  private _clean(value: any) {
-    let result: undefined | Record<string, any> = isObject(value) ? {} : undefined;
+  private _clean<T extends Record<string, any>>(value: T) {
+    if (!this.schema.entries || !isObject(value)) return value;
 
-    if (this.schema.entries && isObject(value)) {
-      if (typeof result === 'undefined') result = {};
+    const result = clone(value);
 
-      for (const key in this.schema.entries) {
-        // @ts-ignore
-        if (value[key] !== undefined && value[key] !== null) {
-          // @ts-ignore
-          result[key] = value[key];
-        }
+    for (const key of Object.keys(value)) {
+      if (!this.schema.entries[key]) {
+        delete result[key];
       }
-    } else {
-      result = value;
     }
 
     return result;
@@ -158,8 +157,29 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     return isObject(value);
   }
 
-  private validateRequired(value: any): boolean {
-    return value !== undefined && value !== null;
+  private validateEntries(value: any, options?: TValidateOptions) {
+    const result: TValidationResult = {
+      valid: true,
+      value: clone(value),
+      error: '',
+    };
+
+    for (const key in this.schema.entries) {
+      const entryResult = this.schema.entries[key].validate(result.value[key], options);
+
+      if (entryResult.valid) {
+        result.value[key] = entryResult.value;
+      } else {
+        if (typeof result.error === 'string') {
+          result.error = {};
+        }
+
+        result.valid = false;
+        result.error[key] = entryResult.error;
+      }
+    }
+
+    return result;
   }
 }
 

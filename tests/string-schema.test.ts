@@ -1125,7 +1125,7 @@ describe('Schema: StringSchema / method: cast()', () => {
 //       },
 //     });
 
-//     expect(string('custom type message').required('custom requred message').end()).toEqual({
+//     expect(string('custom type message').required('custom required message').end()).toEqual({
 //       type: {
 //         value: 'string',
 //         strict: false,
@@ -1133,11 +1133,11 @@ describe('Schema: StringSchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: true,
-//         message: 'custom requred message',
+//         message: 'custom required message',
 //       },
 //     });
 
-//     expect(string('custom type message').notRequired('custom not requred message').end()).toEqual({
+//     expect(string('custom type message').notRequired('custom not required message').end()).toEqual({
 //       type: {
 //         value: 'string',
 //         strict: false,
@@ -1145,12 +1145,12 @@ describe('Schema: StringSchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: false,
-//         message: 'custom not requred message',
+//         message: 'custom not required message',
 //       },
 //     });
 
 //     expect(
-//       string('custom type message').required('custom requred message').notRequired('custom not requred message').end()
+//       string('custom type message').required('custom required message').notRequired('custom not required message').end()
 //     ).toEqual({
 //       type: {
 //         value: 'string',
@@ -1159,12 +1159,12 @@ describe('Schema: StringSchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: false,
-//         message: 'custom not requred message',
+//         message: 'custom not required message',
 //       },
 //     });
 
 //     expect(
-//       string('custom type message').notRequired('custom not requred message').required('custom requred message').end()
+//       string('custom type message').notRequired('custom not required message').required('custom required message').end()
 //     ).toEqual({
 //       type: {
 //         value: 'string',
@@ -1173,7 +1173,7 @@ describe('Schema: StringSchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: true,
-//         message: 'custom requred message',
+//         message: 'custom required message',
 //       },
 //     });
 

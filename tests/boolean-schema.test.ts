@@ -1038,7 +1038,7 @@ describe('Schema: BooleanSchema / method: cast()', () => {
 //       },
 //     });
 
-//     expect(boolean('custom type message').required('custom requred message').end()).toEqual({
+//     expect(boolean('custom type message').required('custom required message').end()).toEqual({
 //       type: {
 //         value: 'boolean',
 //         strict: false,
@@ -1046,11 +1046,11 @@ describe('Schema: BooleanSchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: true,
-//         message: 'custom requred message',
+//         message: 'custom required message',
 //       },
 //     });
 
-//     expect(boolean('custom type message').notRequired('custom not requred message').end()).toEqual({
+//     expect(boolean('custom type message').notRequired('custom not required message').end()).toEqual({
 //       type: {
 //         value: 'boolean',
 //         strict: false,
@@ -1058,12 +1058,12 @@ describe('Schema: BooleanSchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: false,
-//         message: 'custom not requred message',
+//         message: 'custom not required message',
 //       },
 //     });
 
 //     expect(
-//       boolean('custom type message').required('custom requred message').notRequired('custom not requred message').end()
+//       boolean('custom type message').required('custom required message').notRequired('custom not required message').end()
 //     ).toEqual({
 //       type: {
 //         value: 'boolean',
@@ -1072,12 +1072,12 @@ describe('Schema: BooleanSchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: false,
-//         message: 'custom not requred message',
+//         message: 'custom not required message',
 //       },
 //     });
 
 //     expect(
-//       boolean('custom type message').notRequired('custom not requred message').required('custom requred message').end()
+//       boolean('custom type message').notRequired('custom not required message').required('custom required message').end()
 //     ).toEqual({
 //       type: {
 //         value: 'boolean',
@@ -1086,7 +1086,7 @@ describe('Schema: BooleanSchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: true,
-//         message: 'custom requred message',
+//         message: 'custom required message',
 //       },
 //     });
 

@@ -799,7 +799,7 @@ describe('Schema: ArraySchema / method: cast()', () => {
 //       },
 //     });
 
-//     expect(array('custom type message').required('custom requred message').end()).toEqual({
+//     expect(array('custom type message').required('custom required message').end()).toEqual({
 //       type: {
 //         value: 'array',
 //         strict: false,
@@ -807,11 +807,11 @@ describe('Schema: ArraySchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: true,
-//         message: 'custom requred message',
+//         message: 'custom required message',
 //       },
 //     });
 
-//     expect(array('custom type message').notRequired('custom not requred message').end()).toEqual({
+//     expect(array('custom type message').notRequired('custom not required message').end()).toEqual({
 //       type: {
 //         value: 'array',
 //         strict: false,
@@ -819,7 +819,7 @@ describe('Schema: ArraySchema / method: cast()', () => {
 //       },
 //       required: {
 //         value: false,
-//         message: 'custom not requred message',
+//         message: 'custom not required message',
 //       },
 //     });
 
