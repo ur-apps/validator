@@ -1,7 +1,9 @@
-import { TBaseOptions, BaseSchema } from './base';
-import { isBoolean, isNumber } from '../utils';
+import { isBoolean, isNumber } from '@ur-apps/common';
+
 import { messages } from '../constants';
 import type { TPrimitiveValidationResult as TValidationResult } from '../types';
+
+import { BaseSchema, TBaseOptions } from './base';
 
 export type TBooleanOptions = TBaseOptions & {
   isTrue?: { value: boolean; message: string };

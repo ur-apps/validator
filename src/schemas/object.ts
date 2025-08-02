@@ -1,8 +1,10 @@
-import { TBaseOptions, BaseSchema } from './base';
-import { clone, isObject } from '../utils';
+import { clone, isObject } from '@ur-apps/common';
+
 import { messages } from '../constants';
 import type { ArraySchema, BooleanSchema, NumberSchema, StringSchema } from '../schemas';
 import type { TValidationResult } from '../types';
+
+import { BaseSchema, TBaseOptions } from './base';
 
 export type TObjectOptions = TBaseOptions & {
   entries?: TObjectEntries;
@@ -64,6 +66,7 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
             result.value[key] = entryResult.value;
           } else {
             if (typeof result.error === 'string') result.error = {};
+
             result.valid = false;
             result.error[key] = entryResult.error;
           }
@@ -138,7 +141,9 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
       if (typeof result === 'undefined') result = {};
 
       for (const key in this.schema.entries) {
+        // @ts-ignore
         if (value[key] !== undefined && value[key] !== null) {
+          // @ts-ignore
           result[key] = value[key];
         }
       }

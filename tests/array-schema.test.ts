@@ -1,4 +1,4 @@
-import { array, boolean, number, object, string, messages } from '../lib';
+import { array, boolean, messages, number, object, string } from '../src';
 
 describe('Schema: ArraySchema / method: validate()', () => {
   test('default messages: simple', () => {
@@ -104,42 +104,36 @@ describe('Schema: ArraySchema / method: validate()', () => {
       error: '',
     });
 
-    // @ts-ignore
     expect(array().validate(undefined)).toEqual({
       valid: true,
       value: undefined,
       error: '',
     });
 
-    // @ts-ignore
     expect(array().validate(null)).toEqual({
       valid: true,
       value: null,
       error: '',
     });
 
-    // @ts-ignore
     expect(array().validate(true)).toEqual({
       valid: false,
       value: true,
       error: messages.array,
     });
 
-    // @ts-ignore
     expect(array().validate(123)).toEqual({
       valid: false,
       value: 123,
       error: messages.array,
     });
 
-    // @ts-ignore
     expect(array().validate('text')).toEqual({
       valid: false,
       value: 'text',
       error: messages.array,
     });
 
-    // @ts-ignore
     expect(array().validate({})).toEqual({
       valid: false,
       value: {},
@@ -252,28 +246,24 @@ describe('Schema: ArraySchema / method: validate()', () => {
       error: '',
     });
 
-    // @ts-ignore
     expect(array().required().validate(undefined)).toEqual({
       valid: false,
       value: undefined,
       error: messages.required,
     });
 
-    // @ts-ignore
     expect(array().required().validate(null)).toEqual({
       valid: false,
       value: null,
       error: messages.required,
     });
 
-    // @ts-ignore
     expect(array().required().validate('')).toEqual({
       valid: false,
       value: '',
       error: messages.array,
     });
 
-    // @ts-ignore
     expect(array().required().validate({})).toEqual({
       valid: false,
       value: {},
@@ -432,42 +422,36 @@ describe('Schema: ArraySchema / method: validate()', () => {
       error: '',
     });
 
-    // @ts-ignore
     expect(array('custom type message').validate(undefined)).toEqual({
       valid: true,
       value: undefined,
       error: '',
     });
 
-    // @ts-ignore
     expect(array('custom type message').validate(null)).toEqual({
       valid: true,
       value: null,
       error: '',
     });
 
-    // @ts-ignore
     expect(array('custom type message').validate(true)).toEqual({
       valid: false,
       value: true,
       error: 'custom type message',
     });
 
-    // @ts-ignore
     expect(array('custom type message').validate(123)).toEqual({
       valid: false,
       value: 123,
       error: 'custom type message',
     });
 
-    // @ts-ignore
     expect(array('custom type message').validate('text')).toEqual({
       valid: false,
       value: 'text',
       error: 'custom type message',
     });
 
-    // @ts-ignore
     expect(array('custom type message').validate({})).toEqual({
       valid: false,
       value: {},
@@ -580,28 +564,24 @@ describe('Schema: ArraySchema / method: validate()', () => {
       error: '',
     });
 
-    // @ts-ignore
     expect(array('custom type message').required('custom required message').validate(undefined)).toEqual({
       valid: false,
       value: undefined,
       error: 'custom required message',
     });
 
-    // @ts-ignore
     expect(array('custom type message').required('custom required message').validate(null)).toEqual({
       valid: false,
       value: null,
       error: 'custom required message',
     });
 
-    // @ts-ignore
     expect(array('custom type message').required('custom required message').validate('')).toEqual({
       valid: false,
       value: '',
       error: 'custom type message',
     });
 
-    // @ts-ignore
     expect(array('custom type message').required('custom required message').validate({})).toEqual({
       valid: false,
       value: {},
@@ -662,7 +642,6 @@ describe('Schema: ArraySchema / method: isValid()', () => {
   test('simple validation', () => {
     expect(array().isValid([])).toEqual(true);
 
-    // @ts-ignore
     expect(array().isValid({})).toEqual(false);
   });
 });
@@ -706,28 +685,28 @@ describe('Schema: ArraySchema / method: cast()', () => {
       },
     ]);
     expect(array().cast([])).toEqual([]);
-    // @ts-ignore
-    expect(() => array().cast(10)).toThrowError(new TypeError(messages.array));
-    // @ts-ignore
-    expect(() => array().cast({})).toThrowError(new TypeError(messages.array));
-    //@ts-ignore
-    expect(() => array().cast(undefined)).toThrowError(new TypeError(messages.array));
-    //@ts-ignore
-    expect(() => array().cast(null)).toThrowError(new TypeError(messages.array));
-    expect(() => array().of(string().strict()).cast([1, 6, 'text', 3])).toThrowError(
+
+    expect(() => array().cast(10)).toThrow(new TypeError(messages.array));
+
+    expect(() => array().cast({})).toThrow(new TypeError(messages.array));
+
+    expect(() => array().cast(undefined)).toThrow(new TypeError(messages.array));
+
+    expect(() => array().cast(null)).toThrow(new TypeError(messages.array));
+    expect(() => array().of(string().strict()).cast([1, 6, 'text', 3])).toThrow(
       new TypeError(JSON.stringify({ 0: messages.string, 1: messages.string, 3: messages.string }, undefined, 2))
     );
-    expect(() => array().of(string()).cast([true])).toThrowError(
+    expect(() => array().of(string()).cast([true])).toThrow(
       new TypeError(JSON.stringify({ 0: messages.string }, undefined, 2))
     );
-    expect(() => array().of(array().of(number())).cast(['not array'])).toThrowError(
+    expect(() => array().of(array().of(number())).cast(['not array'])).toThrow(
       new TypeError(JSON.stringify({ 0: messages.array }, undefined, 2))
     );
     expect(() =>
       array()
         .of(array().of(number()))
         .cast([['text', 123]])
-    ).toThrowError(new TypeError(JSON.stringify({ 0: { 0: messages.number } }, undefined, 2)));
+    ).toThrow(new TypeError(JSON.stringify({ 0: { 0: messages.number } }, undefined, 2)));
   });
 });
 

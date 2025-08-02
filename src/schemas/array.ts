@@ -1,8 +1,10 @@
-import { TBaseOptions, BaseSchema } from './base';
-import { clone, isArray } from '../utils';
+import { clone, isArray } from '@ur-apps/common';
+
 import { messages } from '../constants';
 import type { BooleanSchema, NumberSchema, ObjectSchema, StringSchema } from '../schemas';
 import type { TValidationResult } from '../types';
+
+import { BaseSchema, TBaseOptions } from './base';
 
 export type TArrayOptions = TBaseOptions & {
   length?: { value: number; message: string };
@@ -120,6 +122,7 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
     }
 
     if (!result.valid) result.value = value;
+
     return result;
   }
 

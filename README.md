@@ -49,7 +49,7 @@ import { object, array, string, number, boolean } from 'ur-validator';
 First, we need to generate a schema, then we can validate the data.
 
 ```js
-import { object, array, string, number, boolean } from 'ur-validator';
+import { array, boolean, number, object, string } from 'ur-validator';
 
 string().minLength(4).validate('example text'); // { valid: true, value: 'example text', error: ''}
 nubmer().min(5).max(100).isValid(22); // true

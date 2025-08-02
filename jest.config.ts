@@ -1,5 +1,6 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} **/
-export default {
+import type { JestConfigWithTsJest } from 'ts-jest';
+
+const config: JestConfigWithTsJest = {
   // A preset that is used as a base for Jest's configuration
   preset: 'ts-jest',
   // Options that will be passed to the testEnvironment
@@ -15,9 +16,11 @@ export default {
   coveragePathIgnorePatterns: ['index.(t|j)s$', '.test.data.(t|j)s$'],
   // The directory where Jest should output its coverage files
   coverageDirectory: 'coverage',
+  // Transform node_modules that use ES modules - allow transforming all files
+  transformIgnorePatterns: [],
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.ts$': [
+    '^.+\\.(j|t)s$': [
       'ts-jest',
       {
         useESM: true,
@@ -27,3 +30,5 @@ export default {
   },
   extensionsToTreatAsEsm: ['.ts'],
 };
+
+export default config;

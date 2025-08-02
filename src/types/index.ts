@@ -1,6 +1,6 @@
 import { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions } from '../schemas';
 
-export { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions };
+export type { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions };
 
 export type TDataTypes = 'array' | 'boolean' | 'number' | 'object' | 'string';
 

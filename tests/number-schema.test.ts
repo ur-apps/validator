@@ -1,4 +1,4 @@
-import { number, messages } from '../lib';
+import { messages, number } from '../src';
 
 describe('Schema: NumberSchema / method: validate()', () => {
   test('default messages: not strict', () => {
@@ -1060,10 +1060,10 @@ describe('Schema: NumberSchema / method: cast()', () => {
   test('data casting', () => {
     expect(number().cast(10)).toEqual(10);
     expect(number().cast('10')).toEqual(10);
-    expect(() => number().strict().cast('10')).toThrowError(new TypeError(messages.number));
-    expect(() => number().strict().cast({})).toThrowError(new TypeError(messages.number));
-    expect(() => number().strict().cast(undefined)).toThrowError(new TypeError(messages.number));
-    expect(() => number().strict().cast(null)).toThrowError(new TypeError(messages.number));
+    expect(() => number().strict().cast('10')).toThrow(new TypeError(messages.number));
+    expect(() => number().strict().cast({})).toThrow(new TypeError(messages.number));
+    expect(() => number().strict().cast(undefined)).toThrow(new TypeError(messages.number));
+    expect(() => number().strict().cast(null)).toThrow(new TypeError(messages.number));
   });
 });
 

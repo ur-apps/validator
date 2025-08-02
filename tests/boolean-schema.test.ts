@@ -1,4 +1,4 @@
-import { boolean, messages } from '../lib';
+import { boolean, messages } from '../src';
 
 describe('Schema: BooleanSchema / method: validate()', () => {
   test('default messages: not strict', () => {
@@ -889,12 +889,12 @@ describe('Schema: BooleanSchema / method: cast()', () => {
     expect(boolean().cast(false)).toEqual(false);
     expect(boolean().cast(1)).toEqual(true);
     expect(boolean().cast(0)).toEqual(false);
-    expect(() => boolean().strict().cast(0)).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().strict().cast(1)).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().cast(undefined)).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().cast(null)).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().cast('string')).toThrowError(new TypeError(messages.boolean));
-    expect(() => boolean().cast({})).toThrowError(new TypeError(messages.boolean));
+    expect(() => boolean().strict().cast(0)).toThrow(new TypeError(messages.boolean));
+    expect(() => boolean().strict().cast(1)).toThrow(new TypeError(messages.boolean));
+    expect(() => boolean().cast(undefined)).toThrow(new TypeError(messages.boolean));
+    expect(() => boolean().cast(null)).toThrow(new TypeError(messages.boolean));
+    expect(() => boolean().cast('string')).toThrow(new TypeError(messages.boolean));
+    expect(() => boolean().cast({})).toThrow(new TypeError(messages.boolean));
   });
 });
 

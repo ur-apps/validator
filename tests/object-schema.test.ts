@@ -1,4 +1,4 @@
-import { array, boolean, number, object, string, messages } from '../lib';
+import { array, boolean, messages, number, object, string } from '../src';
 
 describe('Schema: ObjectSchema / method: validate()', () => {
   test('default messages: simple', () => {
@@ -76,42 +76,36 @@ describe('Schema: ObjectSchema / method: validate()', () => {
       error: '',
     });
 
-    // @ts-ignore
     expect(object().validate(undefined)).toEqual({
       valid: true,
       value: undefined,
       error: '',
     });
 
-    // @ts-ignore
     expect(object().validate(null)).toEqual({
       valid: true,
       value: null,
       error: '',
     });
 
-    // @ts-ignore
     expect(object().validate(true)).toEqual({
       valid: false,
       value: true,
       error: messages.object,
     });
 
-    // @ts-ignore
     expect(object().validate(123)).toEqual({
       valid: false,
       value: 123,
       error: messages.object,
     });
 
-    // @ts-ignore
     expect(object().validate('text')).toEqual({
       valid: false,
       value: 'text',
       error: messages.object,
     });
 
-    // @ts-ignore
     expect(object().validate([])).toEqual({
       valid: false,
       value: [],
@@ -168,28 +162,24 @@ describe('Schema: ObjectSchema / method: validate()', () => {
       error: '',
     });
 
-    // @ts-ignore
     expect(object().required().validate(undefined)).toEqual({
       valid: false,
       value: undefined,
       error: messages.required,
     });
 
-    // @ts-ignore
     expect(object().required().validate(null)).toEqual({
       valid: false,
       value: null,
       error: messages.required,
     });
 
-    // @ts-ignore
     expect(object().required().validate('')).toEqual({
       valid: false,
       value: '',
       error: messages.object,
     });
 
-    // @ts-ignore
     expect(object().required().validate([])).toEqual({
       valid: false,
       value: [],
@@ -272,42 +262,36 @@ describe('Schema: ObjectSchema / method: validate()', () => {
       error: '',
     });
 
-    // @ts-ignore
     expect(object('custom type message').validate(undefined)).toEqual({
       valid: true,
       value: undefined,
       error: '',
     });
 
-    // @ts-ignore
     expect(object('custom type message').validate(null)).toEqual({
       valid: true,
       value: null,
       error: '',
     });
 
-    // @ts-ignore
     expect(object('custom type message').validate(true)).toEqual({
       valid: false,
       value: true,
       error: 'custom type message',
     });
 
-    // @ts-ignore
     expect(object('custom type message').validate(123)).toEqual({
       valid: false,
       value: 123,
       error: 'custom type message',
     });
 
-    // @ts-ignore
     expect(object('custom type message').validate('text')).toEqual({
       valid: false,
       value: 'text',
       error: 'custom type message',
     });
 
-    // @ts-ignore
     expect(object('custom type message').validate([])).toEqual({
       valid: false,
       value: [],
@@ -364,28 +348,24 @@ describe('Schema: ObjectSchema / method: validate()', () => {
       error: '',
     });
 
-    // @ts-ignore
     expect(object('custom type message').required('custom required message').validate(undefined)).toEqual({
       valid: false,
       value: undefined,
       error: 'custom required message',
     });
 
-    // @ts-ignore
     expect(object('custom type message').required('custom required message').validate(null)).toEqual({
       valid: false,
       value: null,
       error: 'custom required message',
     });
 
-    // @ts-ignore
     expect(object('custom type message').required('custom required message').validate('')).toEqual({
       valid: false,
       value: '',
       error: 'custom type message',
     });
 
-    // @ts-ignore
     expect(object('custom type message').required('custom required message').validate([])).toEqual({
       valid: false,
       value: [],
@@ -677,7 +657,6 @@ describe('Schema: ObjectSchema / method: isValid()', () => {
   test('simple validation', () => {
     expect(object().isValid({})).toEqual(true);
 
-    // @ts-ignore
     expect(object().isValid([])).toEqual(false);
   });
 });
@@ -725,14 +704,14 @@ describe('Schema: ObjectSchema / method: cast()', () => {
       object: { a: 1, b: '123' },
       string: '123',
     });
-    // @ts-ignore
-    expect(() => object().cast([])).toThrowError(new TypeError(messages.object));
-    // @ts-ignore
-    expect(() => object().cast(undefined)).toThrowError(new TypeError(messages.object));
-    // @ts-ignore
-    expect(() => object().cast(null)).toThrowError(new TypeError(messages.object));
-    // @ts-ignore
-    expect(() => object().cast(10)).toThrowError(new TypeError(messages.object));
+
+    expect(() => object().cast([])).toThrow(new TypeError(messages.object));
+
+    expect(() => object().cast(undefined)).toThrow(new TypeError(messages.object));
+
+    expect(() => object().cast(null)).toThrow(new TypeError(messages.object));
+
+    expect(() => object().cast(10)).toThrow(new TypeError(messages.object));
     expect(() =>
       object()
         .entries({
@@ -751,7 +730,7 @@ describe('Schema: ObjectSchema / method: cast()', () => {
           object: { a: '1' },
           string: 123,
         })
-    ).toThrowError(
+    ).toThrow(
       new TypeError(
         JSON.stringify(
           {
@@ -877,7 +856,7 @@ describe('Schema: ObjectSchema / method: clean()', () => {
           cleaned2: 321,
           cleaned3: [],
         })
-    ).toThrowError(
+    ).toThrow(
       new TypeError(
         JSON.stringify(
           {
@@ -917,7 +896,7 @@ describe('Schema: ObjectSchema / method: clean()', () => {
           cleaned2: 321,
           cleaned3: [],
         })
-    ).toThrowError(
+    ).toThrow(
       new TypeError(
         JSON.stringify(
           {
@@ -966,7 +945,7 @@ describe('Schema: ObjectSchema / method: clean()', () => {
           string: string(),
         })
         .clean(undefined)
-    ).toThrowError(new TypeError(messages.object));
+    ).toThrow(new TypeError(messages.object));
 
     expect(
       object().clean({

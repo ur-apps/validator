@@ -1,4 +1,4 @@
-import { string, messages } from '../lib';
+import { messages, string } from '../src';
 
 const oneOfList = ['test1', 'test2', 'test3', '123'];
 
@@ -986,10 +986,10 @@ describe('Schema: StringSchema / method: cast()', () => {
   test('data casting', () => {
     expect(string().cast('text')).toEqual('text');
     expect(string().cast(1234)).toEqual('1234');
-    expect(() => string().strict().cast(10)).toThrowError(new TypeError(messages.string));
-    expect(() => string().strict().cast({})).toThrowError(new TypeError(messages.string));
-    expect(() => string().strict().cast(undefined)).toThrowError(new TypeError(messages.string));
-    expect(() => string().strict().cast(null)).toThrowError(new TypeError(messages.string));
+    expect(() => string().strict().cast(10)).toThrow(new TypeError(messages.string));
+    expect(() => string().strict().cast({})).toThrow(new TypeError(messages.string));
+    expect(() => string().strict().cast(undefined)).toThrow(new TypeError(messages.string));
+    expect(() => string().strict().cast(null)).toThrow(new TypeError(messages.string));
   });
 });
 

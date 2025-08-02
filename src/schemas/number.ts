@@ -1,7 +1,9 @@
-import { TBaseOptions, BaseSchema } from './base';
-import { isNumber, isString } from '../utils';
+import { isNumber, isString } from '@ur-apps/common';
+
 import { messages } from '../constants';
 import type { TPrimitiveValidationResult as TValidationResult } from '../types';
+
+import { BaseSchema, TBaseOptions } from './base';
 
 export type TNumberOptions = TBaseOptions & {
   min?: { value: number; message: string };
