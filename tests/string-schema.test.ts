@@ -478,9 +478,9 @@ describe('Schema: StringSchema / method: validate()', () => {
     });
 
     expect(string().minLength(10).oneOf(oneOfList).validate('test1')).toEqual({
-      valid: true,
+      valid: false,
       value: 'test1',
-      error: '',
+      error: 'minimum field length 10 characters',
     });
 
     expect(string().oneOf(oneOfList).validate('test4')).toEqual({
@@ -958,9 +958,7 @@ describe('Schema: StringSchema / method: validate()', () => {
       error: '',
     });
 
-    expect(
-      string('custom type message').minLength(10).oneOf(oneOfList, 'custom oneOf message').validate('test1')
-    ).toEqual({
+    expect(string('custom type message').oneOf(oneOfList, 'custom oneOf message').validate('test1')).toEqual({
       valid: true,
       value: 'test1',
       error: '',

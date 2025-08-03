@@ -33,9 +33,9 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       message: message ?? messages.length(value),
     };
 
-    if (this.schema.oneOf) {
-      delete this.schema.oneOf;
-    }
+    if (this.schema.minLength) delete this.schema.minLength;
+    if (this.schema.maxLength) delete this.schema.maxLength;
+    if (this.schema.equals) delete this.schema.equals;
 
     return this;
   }
@@ -46,9 +46,8 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       message: message ?? messages.short(value),
     };
 
-    if (this.schema.oneOf) {
-      delete this.schema.oneOf;
-    }
+    if (this.schema.length) delete this.schema.length;
+    if (this.schema.equals) delete this.schema.equals;
 
     return this;
   }
@@ -59,9 +58,8 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       message: message ?? messages.long(value),
     };
 
-    if (this.schema.oneOf) {
-      delete this.schema.oneOf;
-    }
+    if (this.schema.length) delete this.schema.length;
+    if (this.schema.equals) delete this.schema.equals;
 
     return this;
   }
@@ -72,9 +70,7 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       message: message ?? messages.format,
     };
 
-    if (this.schema.oneOf) {
-      delete this.schema.equals;
-    }
+    if (this.schema.equals) delete this.schema.equals;
 
     return this;
   }
@@ -85,9 +81,6 @@ export class StringSchema extends BaseSchema<TStringOptions> {
       message: message ?? messages.oneOf(values),
     };
 
-    if (this.schema.length) delete this.schema.length;
-    if (this.schema.minLength) delete this.schema.minLength;
-    if (this.schema.maxLength) delete this.schema.maxLength;
     if (this.schema.equals) delete this.schema.equals;
 
     return this;
