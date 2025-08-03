@@ -2,7 +2,7 @@ import { clone, isNullish, isObject } from '@ur-apps/common';
 
 import { messages } from '../constants';
 import type { ArraySchema, BooleanSchema, NumberSchema, StringSchema } from '../schemas';
-import type { TValidationResult } from '../types';
+import type { TValidateOptions, TValidationContext, TValidationResult } from '../types';
 
 import { BaseSchema, TBaseOptions } from './base';
 
@@ -11,14 +11,6 @@ export type TObjectOptions = TBaseOptions & {
 };
 
 type TObjectEntries = Record<string, ArraySchema | BooleanSchema | NumberSchema | StringSchema | ObjectSchema>;
-
-type TValidateOptions = {
-  /**
-   * Cleans properties that are not in the schema
-   * @default false
-   */
-  clean?: boolean;
-};
 
 export class ObjectSchema extends BaseSchema<TObjectOptions> {
   constructor(entries?: TObjectEntries);
@@ -44,7 +36,7 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
    * @param value any
    * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message or object with property errors (if invalid) }
    */
-  validate(value: any, options?: TValidateOptions): TValidationResult {
+  validate(value: any, options: TValidateOptions = {}, context: TValidationContext = {}): TValidationResult {
     const result: TValidationResult = {
       valid: true,
       value,
@@ -69,7 +61,9 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
       if (this.schema.entries) {
         result.value = clone(value);
 
-        const entriesResult = this.validateEntries(result.value, options);
+        if (!context.root) context.root = result.value;
+
+        const entriesResult = this.validateEntries(result.value, options, context);
 
         result.valid = entriesResult.valid;
         result.value = entriesResult.value;
@@ -157,7 +151,7 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     return isObject(value);
   }
 
-  private validateEntries(value: any, options?: TValidateOptions) {
+  private validateEntries(value: any, options: TValidateOptions, context: TValidationContext): TValidationResult {
     const result: TValidationResult = {
       valid: true,
       value: clone(value),
@@ -165,7 +159,10 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
     };
 
     for (const key in this.schema.entries) {
-      const entryResult = this.schema.entries[key].validate(result.value[key], options);
+      const entryResult = this.schema.entries[key].validate(result.value[key], options, {
+        root: context.root,
+        parent: result.value,
+      });
 
       if (entryResult.valid) {
         result.value[key] = entryResult.value;
@@ -183,6 +180,13 @@ export class ObjectSchema extends BaseSchema<TObjectOptions> {
   }
 }
 
-export function object(message?: string) {
-  return new ObjectSchema(message);
+export function object(entries?: TObjectEntries): ObjectSchema;
+export function object(message?: string): ObjectSchema;
+export function object(entries?: TObjectEntries, message?: string): ObjectSchema;
+export function object(entriesOrMessage?: TObjectEntries | string, message?: string) {
+  if (typeof entriesOrMessage === 'string' || entriesOrMessage === undefined) {
+    return new ObjectSchema(entriesOrMessage);
+  }
+
+  return new ObjectSchema(entriesOrMessage, message);
 }

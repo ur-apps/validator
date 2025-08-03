@@ -1,4 +1,4 @@
-import { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions } from '../schemas';
+import { Reference, TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions } from '../schemas';
 
 export type { TArrayOptions, TBooleanOptions, TNumberOptions, TObjectOptions, TStringOptions };
 
@@ -14,6 +14,22 @@ export type TValidationResult = {
   valid: boolean;
   value: any;
   error: TError;
+};
+
+export type TValidateOptions = {
+  /**
+   * Cleans properties that are not in the schema
+   * @default false
+   */
+  clean?: boolean;
+};
+
+export type TValidationContext<
+  R extends Record<string, any> = Record<string, any>,
+  P extends Record<string, any> = Record<string, any>,
+> = {
+  root?: R | null;
+  parent?: P | null;
 };
 
 export type TPrimitiveValidationResult = {
@@ -38,7 +54,7 @@ export type TDefaultMessages = {
   arrayLong: (length: number) => string;
   small: (min: number) => string;
   large: (max: number) => string;
-  oneOf: (values: string[]) => string;
+  oneOf: (values: Array<string | Reference>) => string;
   format: string;
   unequal: (relField: string) => string;
   true: string;

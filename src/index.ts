@@ -7,11 +7,26 @@ import {
   NumberSchema,
   object,
   ObjectSchema,
+  ref,
+  Reference,
   string,
   StringSchema,
 } from './schemas';
 
-export { array, boolean, number, object, string, ArraySchema, BooleanSchema, NumberSchema, ObjectSchema, StringSchema };
+export {
+  array,
+  boolean,
+  number,
+  object,
+  string,
+  ref,
+  ArraySchema,
+  BooleanSchema,
+  NumberSchema,
+  ObjectSchema,
+  StringSchema,
+  Reference,
+};
 export * from './constants';
 export * from './types';
 export const uv = {
@@ -20,6 +35,7 @@ export const uv = {
   number,
   object,
   string,
+  ref,
 };
 
 export default uv;

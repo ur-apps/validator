@@ -2,7 +2,7 @@ import { clone, isArray, isNullish } from '@ur-apps/common';
 
 import { messages } from '../constants';
 import type { BooleanSchema, NumberSchema, ObjectSchema, StringSchema } from '../schemas';
-import type { TValidationResult } from '../types';
+import type { TValidateOptions, TValidationContext, TValidationResult } from '../types';
 
 import { BaseSchema, TBaseOptions } from './base';
 
@@ -14,14 +14,6 @@ export type TArrayOptions = TBaseOptions & {
 };
 
 type TArrayEntry = ArraySchema | BooleanSchema | NumberSchema | ObjectSchema | StringSchema;
-
-type TValidateOptions = {
-  /**
-   * Cleans properties that are not in the schema
-   * @default false
-   */
-  clean?: boolean;
-};
 
 export class ArraySchema extends BaseSchema<TArrayOptions> {
   constructor(message?: string) {
@@ -63,7 +55,8 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
    * @param value any
    * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message or object with items errors (if invalid) }
    */
-  validate(value: any, options?: TValidateOptions): TValidationResult {
+  // eslint-disable-next-line complexity
+  validate(value: any, options: TValidateOptions = {}, context: TValidationContext = {}): TValidationResult {
     const result: TValidationResult = {
       valid: true,
       value,
@@ -122,8 +115,13 @@ export class ArraySchema extends BaseSchema<TArrayOptions> {
     if (this.schema.entry) {
       result.value = clone(value);
 
+      if (!context.root) context.root = result.value;
+
       for (let i = 0; i < value.length; i++) {
-        const entryResult = this.schema.entry.validate(result.value[i], options);
+        const entryResult = this.schema.entry.validate(result.value[i], options, {
+          root: context.root,
+          parent: result.value,
+        });
 
         if (entryResult.valid) {
           result.value[i] = entryResult.value;

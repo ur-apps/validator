@@ -1,16 +1,18 @@
 import { isNullish, isNumber, isString } from '@ur-apps/common';
 
 import { messages } from '../constants';
-import type { TPrimitiveValidationResult as TValidationResult } from '../types';
+import type { TValidateOptions, TValidationContext, TPrimitiveValidationResult as TValidationResult } from '../types';
 
 import { BaseSchema, TBaseOptions } from './base';
+import { Reference } from './reference';
 
 export type TStringOptions = TBaseOptions & {
   length?: { value: number; message: string };
   minLength?: { value: number; message: string };
   maxLength?: { value: number; message: string };
   match?: { value: RegExp; message: string };
-  oneOf?: { values: string[]; message: string };
+  oneOf?: { values: Array<string | Reference>; message: string };
+  equals?: { value: string | Reference; message: string };
 };
 
 export class StringSchema extends BaseSchema<TStringOptions> {
@@ -71,13 +73,13 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     };
 
     if (this.schema.oneOf) {
-      delete this.schema.oneOf;
+      delete this.schema.equals;
     }
 
     return this;
   }
 
-  oneOf(values: string[], message?: string) {
+  oneOf(values: Array<string | Reference>, message?: string) {
     this.schema.oneOf = {
       values,
       message: message ?? messages.oneOf(values),
@@ -86,7 +88,22 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     if (this.schema.length) delete this.schema.length;
     if (this.schema.minLength) delete this.schema.minLength;
     if (this.schema.maxLength) delete this.schema.maxLength;
+    if (this.schema.equals) delete this.schema.equals;
+
+    return this;
+  }
+
+  equals(value: string | Reference, message?: string) {
+    this.schema.equals = {
+      value,
+      message: message ?? messages.unequal(value instanceof Reference ? value.getPath().toString() : value),
+    };
+
+    if (this.schema.length) delete this.schema.length;
+    if (this.schema.minLength) delete this.schema.minLength;
+    if (this.schema.maxLength) delete this.schema.maxLength;
     if (this.schema.match) delete this.schema.match;
+    if (this.schema.oneOf) delete this.schema.oneOf;
 
     return this;
   }
@@ -96,7 +113,8 @@ export class StringSchema extends BaseSchema<TStringOptions> {
    * @param value any
    * @returns { TValidationResult } { isValid: boolean, value: cast value (if valid), error: error message (if invalid) }
    */
-  validate(value: any): TValidationResult {
+  // eslint-disable-next-line complexity
+  validate(value: any, _options?: TValidateOptions, context: TValidationContext = {}): TValidationResult {
     const result = {
       valid: true,
       value,
@@ -162,11 +180,20 @@ export class StringSchema extends BaseSchema<TStringOptions> {
           return result;
 
         case 'oneOf':
-          if (this.validateOneOf(result.value, this.schema.oneOf!.values)) break;
+          if (this.validateOneOf(result.value, this.schema.oneOf!.values, context)) break;
 
           result.valid = false;
           result.value = value;
           result.error = this.schema.oneOf!.message;
+
+          return result;
+
+        case 'equals':
+          if (this.validateEquals(result.value, this.schema.equals!.value, context)) break;
+
+          result.valid = false;
+          result.value = value;
+          result.error = this.schema.equals!.message;
 
           return result;
 
@@ -230,8 +257,22 @@ export class StringSchema extends BaseSchema<TStringOptions> {
     return regexp.test(value);
   }
 
-  private validateOneOf(value: string, values: string[]): boolean {
-    return values.includes(value);
+  private validateOneOf(value: string, values: Array<string | Reference>, context: TValidationContext): boolean {
+    return values.some((v) => {
+      if (v instanceof Reference) {
+        const refValue = v.getValue(context);
+
+        return refValue === value;
+      }
+
+      return v === value;
+    });
+  }
+
+  private validateEquals(value: string, equals: string | Reference, context: TValidationContext): boolean {
+    const compareValue = equals instanceof Reference ? equals.getValue(context) : equals;
+
+    return value === compareValue;
   }
 }
 
